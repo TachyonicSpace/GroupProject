@@ -13,6 +13,7 @@ public:
 	void OnImGuiRender();
 
 	void Begin();
-	void End(Application& app);
+	void End();
 private:
+	Application& app;
 };

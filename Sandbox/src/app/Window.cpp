@@ -31,7 +31,6 @@ void Window::Init(const WindowProps& props)
 	m_Data.Width = props.Width;
 	m_Data.Height = props.Height;
 
-	std::cout << "Creating a Window " + props.Title << "(" << props.Width << ", " << props.Height << ")";
 
 
 	if (!s_GLFWInitilized)

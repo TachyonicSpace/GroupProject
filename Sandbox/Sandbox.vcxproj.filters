@@ -28,6 +28,7 @@
     <ClInclude Include="src\Events\input.h" />
     <ClInclude Include="src\app\application.h" />
     <ClInclude Include="src\app\Window.h" />
+    <ClInclude Include="src\ProjectClassFiles\Bank\Bank.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SandboxApp.cpp" />
@@ -36,5 +37,8 @@
     <ClCompile Include="src\Events\input.cpp" />
     <ClCompile Include="src\app\application.cpp" />
     <ClCompile Include="src\app\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\ProjectClassFiles\Bank\Accounts.txt" />
   </ItemGroup>
 </Project>

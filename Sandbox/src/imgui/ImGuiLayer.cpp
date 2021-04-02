@@ -18,11 +18,8 @@ ImGuiStartup::ImGuiStartup(Application& App)
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; //enables keyboard controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; //enables Gamepad controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; //enables docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; //enables multi-viewport / platform windows
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-	//io.ConfigFlags |= ImGuiConfigFlags_VeiwPortsNoMerge;
 
 	//setup ImGui style
 	ImGui::StyleColorsDark();
@@ -124,20 +121,6 @@ void ImGuiStartup::Begin()
 			style.WindowMinSize.x = minWinSizeX;
 
 		}
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-
-				if (ImGui::MenuItem("Exit"))
-					app.m_Running = false;
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenuBar();
-		}
-
 	}
 
 }

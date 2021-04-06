@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Events\Event.h"
 #include "string"
 #include <functional>
 
-//#include <D:\Hazel\Hazel\vendor\GLFW\include\GLFW\glfw3.h>
+//allows us to not include the entire window library header
 struct GLFWwindow;
+
+//the window initializer properties
 struct WindowProps
 {
 	std::string Title;
@@ -23,27 +24,26 @@ struct WindowProps
 class Window
 {
 public:
-	using EventCallbackFn = std::function<void(Event&)>;
+	//makes code more readable
+	using EventCallbackFn = std::function<void()>;
 
 
 	Window(const WindowProps& props);
-	virtual ~Window();
+	~Window();
 
+	//updates window frames
 	void OnUpdate() ;
 
-	inline unsigned int GetWidth() const  { return m_Data.Width; }
-	inline unsigned int GetHeight() const  { return m_Data.Height; }
-	inline float GetAspectRatio() const  { return (float)m_Data.Width / (float)m_Data.Height; }
+	unsigned int GetWidth() const  { return m_Data.Width; }
+	unsigned int GetHeight() const  { return m_Data.Height; }
 
 	//Window attributes
-	inline void SetEventCallback(const EventCallbackFn& callback)  { m_Data.EventCallback = callback; }
-	void SetVSync(bool enabled) ;
-	bool IsVSync() const ;
+	void SetEventCallback(const EventCallbackFn& callback)  { m_Data.CloseApplication = callback; }
 
-	inline virtual void* GetNativeWindow() const { return m_Window; }
+	void* GetNativeWindow() const { return m_Window; }
 private:
-	virtual void Init(const WindowProps& props);
-	virtual void ShutDown();
+	void Init(const WindowProps& props);
+	void ShutDown();
 private:
 	GLFWwindow* m_Window;
 
@@ -51,9 +51,8 @@ private:
 	{
 		std::string Title;
 		unsigned int Width = -1, Height = -1;
-		bool VSync = false;
 
-		EventCallbackFn EventCallback;
+		EventCallbackFn CloseApplication;
 	};
 
 	WindowData m_Data;

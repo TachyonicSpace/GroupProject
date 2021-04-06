@@ -1,15 +1,18 @@
 #include "ImGuiLayer.h"
 
+//needed defines for imgui
 #define IMGUI_IMPL_API
 #define IMGUI_IMPL_OPENGL_LOADER_GLAD
 #include "imgui.h"
+//includes these so we just cal the functions, not make them from scratch
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
 
-//temp
+//gives access to the window
 #include <GLFW\glfw3.h>
 
 
+//a class to handle imgui calls
 ImGuiStartup::ImGuiStartup(Application& App)
 	:app(App)
 {
@@ -41,25 +44,13 @@ ImGuiStartup::ImGuiStartup(Application& App)
 
 ImGuiStartup::~ImGuiStartup()
 {
+	//destroys all references on deletion
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void ImGuiStartup::OnImGuiRender()
-{
-	//static bool show = true;
-	//ImGui::ShowDemoWindow(&show);
-}
-
-bool ImGuiStartup::OnEvent(Event& e)
-{
-	auto io = ImGui::GetIO();
-	e.handled |= e.IsInCategory(EventCategory::EventCategoryMouse) & io.WantCaptureMouse;
-	e.handled |= e.IsInCategory(EventCategory::EventCategoryKeyboard) & io.WantCaptureKeyboard;
-	return true;
-}
-
+//initializes imgui for rendering
 void ImGuiStartup::Begin()
 {
 	ImGui_ImplOpenGL3_NewFrame();
@@ -131,6 +122,7 @@ void ImGuiStartup::End()
 	//close docking
 	ImGui::End();
 
+	//sets the window size
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
@@ -140,9 +132,13 @@ void ImGuiStartup::End()
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
+		//updates the view ports
 		GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 		glfwMakeContextCurrent(backupCurrentContext);
 	}
+
+
+	app.UpdateWindow();		//update application frames
 }

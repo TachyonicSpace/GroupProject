@@ -136,19 +136,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\ProjectClassFiles\Bank\Bank.h" />
-    <ClInclude Include="src\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Events\Event.h" />
-    <ClInclude Include="src\Events\KeyCodes.h" />
-    <ClInclude Include="src\Events\KeyEvent.h" />
-    <ClInclude Include="src\Events\MouseButtonCodes.h" />
-    <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\imgui\ImGuiLayer.h" />
     <ClInclude Include="src\app\Window.h" />
     <ClInclude Include="src\app\application.h" />
-    <ClInclude Include="src\Events\input.h" />
+    <ClInclude Include="src\ProjectClassFiles\Users\Users.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Events\input.cpp" />
     <ClCompile Include="src\imgui\ImGuiBuild.cpp" />
     <ClCompile Include="src\imgui\ImGuiLayer.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
@@ -168,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\ProjectClassFiles\Bank\Accounts.txt" />
+    <Text Include="src\ProjectClassFiles\Users\users.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

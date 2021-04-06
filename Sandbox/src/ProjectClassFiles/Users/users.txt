@@ -1,0 +1,220 @@
+{
+username: r52q
+password: kuvn
+IsAdmin: 0
+address: fdkf st
+phone :903201085
+Credit card number: 10
+Premium Account: 0
+First Annual Purchase: 1
+}
+{
+username: c8hi
+password: gqtj
+IsAdmin: 0
+address: yd51 st
+phone :114410273
+Credit card number: 11
+Premium Account: 1
+First Annual Purchase: 0
+}
+{
+username: ybcq
+password: xky1
+IsAdmin: 0
+address: jt61 st
+phone :950444390
+Credit card number: 12
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: 1yhl
+password: xq1i
+IsAdmin: 0
+address: ilt2 st
+phone :814967646
+Credit card number: 13
+Premium Account: 1
+First Annual Purchase: 1
+}
+{
+username: 0k2r
+password: 1s16
+IsAdmin: 0
+address: fyjj st
+phone :998845625
+Credit card number: 14
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: 73qk
+password: imkk
+IsAdmin: 0
+address: yeux st
+phone :632084427
+Credit card number: 15
+Premium Account: 1
+First Annual Purchase: 1
+}
+{
+username: z1ip
+password: 4utx
+IsAdmin: 0
+address: 5e62 st
+phone :957631252
+Credit card number: 16
+Premium Account: 1
+First Annual Purchase: 0
+}
+{
+username: 6w1f
+password: cpzc
+IsAdmin: 0
+address: dg8r st
+phone :181981058
+Credit card number: 17
+Premium Account: 0
+First Annual Purchase: 1
+}
+{
+username: pp68
+password: ktpd
+IsAdmin: 0
+address: 4yvo st
+phone :321430725
+Credit card number: 18
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: fy3t
+password: fygh
+IsAdmin: 0
+address: 2blw st
+phone :712838664
+Credit card number: 19
+Premium Account: 1
+First Annual Purchase: 0
+}
+{
+username: tjts
+password: g4k5
+IsAdmin: 0
+address: 1op5 st
+phone :136588740
+Credit card number: 20
+Premium Account: 1
+First Annual Purchase: 1
+}
+{
+username: oxn9
+password: wayw
+IsAdmin: 0
+address: ik3e st
+phone :323263683
+Credit card number: 21
+Premium Account: 1
+First Annual Purchase: 1
+}
+{
+username: pgr7
+password: h9ee
+IsAdmin: 0
+address: a823 st
+phone :502880960
+Credit card number: 22
+Premium Account: 0
+First Annual Purchase: 1
+}
+{
+username: 7gz5
+password: 9oii
+IsAdmin: 0
+address: 9fpq st
+phone :705195662
+Credit card number: 23
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: ql32
+password: 0iko
+IsAdmin: 0
+address: l42x st
+phone :295735823
+Credit card number: 24
+Premium Account: 0
+First Annual Purchase: 1
+}
+{
+username: 98gt
+password: bgfw
+IsAdmin: 0
+address: dxz9 st
+phone :108097801
+Credit card number: 25
+Premium Account: 0
+First Annual Purchase: 1
+}
+{
+username: fwy3
+password: thiy
+IsAdmin: 0
+address: 3q4a st
+phone :797350135
+Credit card number: 26
+Premium Account: 0
+First Annual Purchase: 1
+}
+{
+username: uon0
+password: f9yp
+IsAdmin: 0
+address: 1qaj st
+phone :693586347
+Credit card number: 27
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: amm8
+password: 4z4u
+IsAdmin: 0
+address: oucv st
+phone :483572039
+Credit card number: 28
+Premium Account: 1
+First Annual Purchase: 1
+}
+{
+username: 6nid
+password: q7p2
+IsAdmin: 0
+address: 55sy st
+phone :688577383
+Credit card number: 29
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: umu3
+password: lyz2
+IsAdmin: 0
+address: d2ik st
+phone :917729804
+Credit card number: 30
+Premium Account: 0
+First Annual Purchase: 0
+}
+{
+username: silv
+password: vyxm
+IsAdmin: 0
+address: aq7m st
+phone :595459620
+Credit card number: 31
+Premium Account: 0
+First Annual Purchase: 0
+}

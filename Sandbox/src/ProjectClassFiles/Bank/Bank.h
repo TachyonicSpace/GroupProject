@@ -9,49 +9,38 @@ public:
 	Bank()
 	{
 		//stores all the accounts in the account file inside in
-		std::string str;
-		std::ifstream in("src\\ProjectClassFiles\\Bank\\Accounts.txt");
+		FILE *in = fopen("src\\ProjectClassFiles\\Bank\\Accounts.txt", "r");
 
 		//while we haven't reached the end of the file
-		while (in.peek() != std::ifstream::traits_type::eof())
-		{
-			//store the next line in str
-			in >> str;
-			//extract the card number from the string
-			int cardnum = std::stoi(str.substr(0, str.find("->")));
-			//remove the card number, and the number separator from string
-			str = str.substr(str.find("->") + 2);
-			//store account balance
-			int bal = std::stoi(str);
-			//store the balance inside the map getting map[card number] = balance
-			accounts[cardnum] = bal;
+		while (!feof(in))
+		{		//store account balance
+
+			int cardnum, bal;
+			fscanf(in, "%d->%d", &cardnum, &bal);
+
+
+			accounts[cardnum] = bal;			//store the balance inside the map getting map[card number] = balance
+
 		}
 	}
 
 	//charges the card the price
 	void ChargeAmount(int CreditCard, int price)
-	{
-		//todo: remove
-		if (Request)
-			std::cout << "charging card\t";
-
+	{		
+		bool found = false;//set found to false since we haven't found the card number in our system
+		int* balance;//store the memory address of the balance of that card number
 		
-		//set found to false since we haven't found the card number in our system
-		bool found = false;
-		//store the memory address of the balance of that card number
-		int* balance;
-		//loop through all accounts
-		for (auto& account : accounts)
+		for (auto& account : accounts)//loop through all accounts
 		{
-			//if the account card number matches the one we are looking for
-			if (account.first == CreditCard)
+			if (account.first == CreditCard)//if the account card number matches the one we are looking for
 			{
-				//set found to true and store the balance's memory address, and break loop
-				found = true;
+				found = true;//set found to true and store the balance's memory address, and break loop since we got what we wanted
 				balance = &account.second;
 				break;
 			}
 		}
+
+
 		//if we found the card, try and charge them, else set the conformation number to -1
 		if (found)
 		{
@@ -70,9 +59,8 @@ public:
 
 		//set request to false since we processed this
 		Request = false;
-
 	}
-	unsigned long ConformationNumber = 0x123456789abcdef;
+	unsigned long ConformationNumber = -1;
 	bool Request = false;
 	std::map<int, int> accounts;
 private:

@@ -9,9 +9,6 @@ public:
 	ImGuiStartup(Application& app);
 	~ImGuiStartup();
 
-	bool OnEvent(Event& e);
-	void OnImGuiRender();
-
 	void Begin();
 	void End();
 private:

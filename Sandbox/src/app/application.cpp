@@ -1,47 +1,25 @@
 #include "Application.h"
 
-#include "Events\input.h"
-#include "imgui\ImGuiLayer.h"
 
-//#include <D:\Hazel\Hazel\vendor\GLFW\include\GLFW\glfw3.h>
-
-
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+#define BIND_EVENT_FN(x) std::bind(&Application::x, this)
 
 
 Application::Application(const WindowProps& props)
 {
+	//makes new window
 	m_Window = NewRef<Window>(props);
-	m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-	Input::app = this;
+	//only event we need to monitor is closing the window
+	m_Window->SetEventCallback((const Window::EventCallbackFn)(BIND_EVENT_FN(OnWindowClose)));
 }
 
-void Application::OnEvent(Event& e)
-{
-
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-	dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
-
-	imgs->OnEvent(e);
-}
-
-Application::~Application()
-{
-}
-
-void Application::Run()
+//update frames
+void Application::UpdateWindow()
 {
 	m_Window->OnUpdate();
 }
 
-bool Application::OnWindowClose(WindowCloseEvent& e)
+//closes window
+void Application::OnWindowClose()
 {
 	m_Running = false;
-	return true;
-}
-
-bool Application::OnWindowResize(WindowResizeEvent& e)
-{
-	return true;
 }

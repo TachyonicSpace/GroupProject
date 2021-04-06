@@ -36,17 +36,6 @@ static void getUsers()
 		int PremiumAccount = -1;
 		int FirstAnnualPurchase = -1;
 
-		std::string fstring = "{\n"
-			"username: %s\n"
-			"password: %s\n"
-			"IsAdmin: %d\n"
-			"address: %s st\n"
-			"phone :%s\n"
-			"Credit card number: %d\n"
-			"Premium Account: %d\n"
-			"First Annual Purchase: %d\n"
-			"}";
-
 		int debuging = 0;
 		if (0 == fscanf(in, "{\nusername: %s\n", username))
 			debuging++;
@@ -69,4 +58,39 @@ static void getUsers()
 		allUsers.push_back({ username, password, (bool)IsAdmin, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
 
 	}
+
+	fclose(in);
+}
+
+static void setUsers()
+{
+	FILE* out = fopen("src\\ProjectClassFiles\\Users\\users.txt", "w");
+
+	Users customer;
+	for (int i = 0; i < allUsers.size(); i++)
+	{
+		customer = allUsers[i];
+		int debuging = 0;
+		if (0 == fprintf(out, "{\nusername: %s\n", customer.username.c_str()))
+			debuging++;
+		if (0 == fprintf(out, "password: %s\n", customer.password.c_str()))
+			debuging++;
+		if (0 == fprintf(out, "IsAdmin: %d\n", customer.IsAdmin))
+			debuging++;
+		if (0 == fprintf(out, "address: %s\n", customer.address.c_str()))
+			debuging++;
+		if (0 == fprintf(out, "phone :%s\n", customer.phone.c_str()))
+			debuging++;
+		if (0 == fprintf(out, "Credit card number: %d\n", customer.CreditCardNumber))
+			debuging++;
+		if (0 == fprintf(out, "Premium Account: %d\n", customer.PremiumAccount))
+			debuging++;
+		if (0 == fprintf(out, "First Annual Purchase: %d\n}", customer.FirstAnnualPurchase))
+			debuging++;
+
+		if (i != allUsers.size() - 1)
+			fprintf(out, "\n");
+	}
+
+	fclose(out);
 }

@@ -22,6 +22,7 @@ public:
 			accounts[cardnum] = bal;			//store the balance inside the map getting map[card number] = balance
 
 		}
+		fclose(in);
 	}
 
 	//charges the card the price
@@ -45,7 +46,7 @@ public:
 		if (found)
 		{
 			//only charge them if they have enough on their card
-			bool charged = (*balance > price);
+			bool charged = (*balance >= price);
 			//since booleans equate to 1 or zero if they are true or false, multiplying by the bool will only change value if true
 			*balance -= charged * price;
 			//store a random number

@@ -80,17 +80,24 @@ public:
 			//adds a menu to the top for account settings
 			if (ImGui::BeginMenu("Account Settings"))
 			{
-				//ends program
-				if (ImGui::MenuItem("Quit"))
-					app.m_Running = false;
 
 				if (loggedin)
 				{
 					if (loggedin->IsAdmin)
-						ImGui::MenuItem("Browse Catalog");
+						ImGui::MenuItem("Browse inventory");
 
 					if (ImGui::MenuItem("logout"))
 						loggedin = false;
+					
+					if (ImGui::MenuItem("delete account"))
+					{
+						int i;
+						for (i = 0; i < allUsers.size(); i++)
+							if (&allUsers[i] == loggedin)
+								break;
+						allUsers.erase(allUsers.begin() + i);
+						loggedin = nullptr;
+					}
 				}
 				ImGui::EndMenu();
 			}
@@ -109,6 +116,9 @@ public:
 			static std::string str = "";
 			//bool to see if we add on a charge for the premium account
 			bool addPremiumPrice = loggedin && loggedin->PremiumAccount && loggedin->FirstAnnualPurchase;
+
+			//bool to see if we are currently adding new customer
+			static bool newcust = false;
 
 			//if the customer is logged in, then they will see these options
 			if (loggedin)
@@ -160,7 +170,7 @@ public:
 			}
 
 			//if the customer is not logged in, they will see this login screen
-			else
+			else if (!newcust)
 			{
 				//TODO: implement checking for user or password
 				std::string pass;
@@ -172,7 +182,7 @@ public:
 				//if customer hits enter on password or hits sign in button, check credentials and login
 				if (password || ImGui::Button("login"))
 				{
-					for(Users& user : allUsers)
+					for (Users& user : allUsers)
 					{
 						if (strcmp(str.c_str(), user.username.c_str()) == 0)
 							if (strcmp(pass.c_str(), user.password.c_str()) == 0)
@@ -190,6 +200,42 @@ public:
 					}
 				}
 
+				newcust = ImGui::Button("Sign up for new account?");
+
+			}
+
+			//making a new account
+			else
+			{
+				static std::string username, password, password0, phone, address;
+				static int cc = 0;
+				static bool premium = false;
+
+				if (ImGui::InputTextWithHint("username", "please enter a new 4 digit username", &username[0], 5))
+					username.shrink_to_fit();
+				if (ImGui::InputTextWithHint("password", "please enter a new 4 digit password", &password[0], 5))
+					password.shrink_to_fit();
+				if (ImGui::InputTextWithHint("confirm password", "please confirm your 4 digit password", &password0[0], 5))
+					password0.shrink_to_fit();
+				if (strcmp(password.c_str(), password0.c_str()) != 0)
+				{
+					ImGui::TextColored({ 1, .2, .36, 1 }, "\tplease make sure your passwords match");
+				}
+				else
+				{
+					if (ImGui::InputTextWithHint("address", "please enter your 4 digit street number", &address[0], 5))
+						address.shrink_to_fit();
+					if (ImGui::InputTextWithHint("phone number", "please enter a 10 digit phone number", &phone[0], 11))
+						phone.shrink_to_fit();
+					ImGui::InputInt("credit card", &cc);
+					ImGui::Checkbox("sign up for premium? there will be a $40 charge added on your first purchase of the year?", &premium);
+
+					if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && strlen(phone.c_str()) == 10 && strlen(address.c_str()) == 4 && cc > 999 && ImGui::Button("create account"))
+					{
+						allUsers.push_back({ username, password, newcust = false, address, phone, cc, premium, true });
+						loggedin = &allUsers[allUsers.size() - 1];
+					}
+				}
 			}
 
 		EndStore://move above this if statement?
@@ -202,7 +248,7 @@ public:
 	{
 		//debug settings, allow us to alter the settings that normally we cant change easily
 		ImGui::Begin("settings");
-		
+
 		{//everything between these brackets calculate the index into all users we are
 			int i = -1;
 			for (auto& user : allUsers)
@@ -289,7 +335,7 @@ public:
 				chargingAmount = total;
 
 				bank->Request = true;			//tell the bank we want to charge our card
-				std::cout << "\n";
+				std::cout << "\n\t";
 				int i = 0;
 				while (bank->Request)			//wait for the bank to process our payment, when finished it will change this to false, breaking the loop
 				{
@@ -373,6 +419,7 @@ int main()
 {
 	ImGuiStartup* start = new ImGuiStartup(*app);	//initialize imgui settings
 	OnImGuiRender OOSS(*app);
+
 	getUsers();
 
 	while (app->m_Running)	//loop until we stop application
@@ -383,6 +430,8 @@ int main()
 		start->End();		//render everything we did in above function
 	}
 	bankingSystem.join();	//wait for the thread to finish before exiting
+
+	setUsers();
 
 	//memory cleanup
 	delete app;

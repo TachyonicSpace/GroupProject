@@ -13,7 +13,7 @@ struct WindowProps
 	unsigned int Width;
 	unsigned int Height;
 
-	WindowProps(const std::string& title = "Hazel Engine",
+	WindowProps(const std::string& title = "Online shopping system",
 		unsigned int width = 900,
 		unsigned int height = 500)
 		:Title(title), Width(width), Height(height)

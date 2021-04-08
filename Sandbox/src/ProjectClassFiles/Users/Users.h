@@ -9,12 +9,12 @@ public:
 public:
 	std::string username;
 	std::string password;
-	bool IsAdmin;
+	bool IsAdmin = false;
 	std::string address;
 	std::string phone;
-	int CreditCardNumber;
-	bool PremiumAccount;
-	bool FirstAnnualPurchase;
+	int CreditCardNumber = -1;
+	bool PremiumAccount = false;
+	bool FirstAnnualPurchase = false;
 };
 
 

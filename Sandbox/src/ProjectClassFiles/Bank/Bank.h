@@ -16,7 +16,7 @@ public:
 		{		//store account balance
 
 			int cardnum, bal;
-			fscanf(in, "%d->%d", &cardnum, &bal);
+			if (!fscanf(in, "%d->%d", &cardnum, &bal));
 
 
 			accounts[cardnum] = bal;			//store the balance inside the map getting map[card number] = balance

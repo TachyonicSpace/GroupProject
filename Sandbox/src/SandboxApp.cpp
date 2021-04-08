@@ -219,7 +219,7 @@ public:
 					password0.shrink_to_fit();
 				if (strcmp(password.c_str(), password0.c_str()) != 0)
 				{
-					ImGui::TextColored({ 1, .2, .36, 1 }, "\tplease make sure your passwords match");
+					ImGui::TextColored({ 1, .2f, .36f, 1 }, "\tplease make sure your passwords match");
 				}
 				else
 				{
@@ -227,10 +227,10 @@ public:
 						address.shrink_to_fit();
 					if (ImGui::InputTextWithHint("phone number", "please enter a 10 digit phone number", &phone[0], 11))
 						phone.shrink_to_fit();
-					ImGui::InputInt("credit card", &cc);
+					ImGui::InputInt("2 digit credit card", &cc);
 					ImGui::Checkbox("sign up for premium? there will be a $40 charge added on your first purchase of the year?", &premium);
 
-					if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && strlen(phone.c_str()) == 10 && strlen(address.c_str()) == 4 && cc > 999 && ImGui::Button("create account"))
+					if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && strlen(phone.c_str()) == 10 && strlen(address.c_str()) == 4 && cc > 9 && cc<100 && ImGui::Button("create account"))
 					{
 						allUsers.push_back({ username, password, newcust = false, address, phone, cc, premium, true });
 						loggedin = &allUsers[allUsers.size() - 1];

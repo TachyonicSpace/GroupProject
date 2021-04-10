@@ -87,6 +87,9 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.idb
+*.tlog
+*.lastbuildstate
 
 # Chutzpah Test files
 _Chutzpah*
@@ -342,3 +345,7 @@ healthchecksdb
 # Directories
 bin/
 bin-int/
+Sandbox/bin-int/
+
+Sandbox/vendor/Glad/bin-int/
+Sandbox/vendor/Glad/bin/

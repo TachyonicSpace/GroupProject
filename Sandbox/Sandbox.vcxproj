@@ -20,6 +20,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Sandbox</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>OSS</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -57,7 +58,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Debug-windows-x86_64\Sandbox\</OutDir>
     <IntDir>..\bin-int\Debug-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <TargetName>OSS</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,12 +140,13 @@
     <ClInclude Include="src\imgui\ImGuiLayer.h" />
     <ClInclude Include="src\app\Window.h" />
     <ClInclude Include="src\app\application.h" />
+    <ClInclude Include="src\ProjectClassFiles\Items\Item.h" />
     <ClInclude Include="src\ProjectClassFiles\Users\Users.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\imgui\ImGuiBuild.cpp" />
     <ClCompile Include="src\imgui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\SandboxApp.cpp" />
+    <ClCompile Include="src\OSS.cpp" />
     <ClCompile Include="src\app\Window.cpp" />
     <ClCompile Include="src\app\application.cpp" />
   </ItemGroup>

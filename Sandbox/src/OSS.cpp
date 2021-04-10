@@ -4,31 +4,15 @@
 #include "iostream"
 #include "ProjectClassFiles/Bank/Bank.h"
 #include "ProjectClassFiles/Users/Users.h"
+#include "ProjectClassFiles/Items/Item.h"
 #include "chrono"
 #include <thread>
 using namespace std::chrono_literals;
 
-//temporary
-class Items
-{
-public:
-	Items(int Amount, std::string Name, int Price)
-		:amount(Amount), name(Name), priceInPennies(Price) {}
-	int amount;
-	std::string name;
-	std::string price()
-	{
-		int p = amount * priceInPennies;
-		return "$" + std::to_string(p / 100) + "." + std::to_string(p % 100);
-	}
-private:
-	int priceInPennies;
-};
-
 
 
 //TODO: implement in customer's account
-std::vector<Items> cart;
+std::vector<Item> cart, inventory;
 //TODO: replace with a user ptr
 Users* loggedin = nullptr;
 
@@ -123,13 +107,35 @@ public:
 			//if the customer is logged in, then they will see these options
 			if (loggedin)
 			{
-				//boolean to see if we are adding an item to the cart
-				bool enter;
-				//TODO: replace with a filter to filter items in a list of catalog items
-				enter = ImGui::InputText("hello", &str[0], 255, ImGuiInputTextFlags_EnterReturnsTrue);			ImGui::SameLine();
+				//pointer to see what item we are adding an item to the cart
+				Item* enter = nullptr;
 
-				//enter will add items to cart if user presses enter after typing item, or pressing add to cart
-				enter = enter || ImGui::Button("add to cart");
+				static int priceRange[] = { 0, 0xfffffff };
+				
+				//filter to filter items by name or discription
+				ImGui::InputText("filter item name & discription", &str[0], 255); 
+				ImGui::InputInt2("min and max price filter", priceRange);
+				ImGui::Separator();
+
+				bool first = true;
+				for (auto& item : inventory)
+				{
+					if (item.regPrice > priceRange[0] && item.regPrice < priceRange[1] && (item.name.find(str.c_str()) != std::string::npos || item.discription.find(str.c_str()) != std::string::npos))
+					{
+						if (!first)
+							ImGui::Separator();
+						
+						ImGui::Text("%s\t\nPremium Price: %s, regular price: %s\n\t%s", item.name.c_str(), item.getPremPrice().c_str(),
+							item.getRegPrice().c_str(), item.discription.c_str());
+						
+						if (ImGui::Button(("add to cart##" + item.name + item.discription).c_str()))
+						{
+							enter = &item;
+							break;
+						}
+					}
+				}
+				
 
 				//a way to randomly generate a unique price, only taking last items memory address if it exist
 				void* p = cart.empty() ? &str : (void*)&cart[cart.size() - 1];
@@ -153,7 +159,7 @@ public:
 					if (enter)
 					{
 						//check to see if item already is in cart
-						if (strcmp(str.c_str(), item.name.c_str()) == 0)
+						if (strcmp(enter->name.c_str(), item.name.c_str()) == 0)
 						{
 							//increases the quantity in the cart to make it more compact, and jumps to end of this window
 							item.amount++;
@@ -163,10 +169,10 @@ public:
 				}
 				//if added item is not found, add it to cart, but keep price between 1000 pennies, or $10
 				if (enter)
-					cart.push_back(Items(1, str, (unsigned int)(p) % 1000));
+					cart.push_back(*enter);
 				//if we need to add the premium charge to account, add it here
 				if (addPremiumPrice)
-					cart.emplace(cart.begin(), Items(1, "Premium account First Time Annual Charge", 4000));
+					cart.emplace(cart.begin(), Item("Premium account First Time Annual Charge", 1, "a charge placed on your card \nfor being a premium member, \nallowing you to get the cheaper \nprices at checkout.", 4000, 4000));
 			}
 
 			//if the customer is not logged in, they will see this login screen
@@ -318,7 +324,7 @@ public:
 			//add all the prices of the cart
 			for (auto& item : cart)
 			{
-				auto p = item.price().substr(1);
+				auto p = item.price(loggedin->PremiumAccount).substr(1);
 				cents += std::stoi(p.substr(p.find(".") + 1));
 				bills += std::stoi(p);
 			}
@@ -328,8 +334,11 @@ public:
 			auto label = "total: $" + std::to_string(total / 100) + "." + std::to_string(total % 100);
 
 			//updates the credit card the banking system is looking for, and the amount to charge if checked out
-
-			if (ImGui::Button("Checkout?"))		//if checking out
+			std::string checkout = "Checkout?";
+			if (loggedin && loggedin->PremiumAccount)
+				checkout = "Premium " + checkout;
+			
+			if (ImGui::Button(checkout.c_str()))		//if checking out
 			{
 				creditCard = loggedin->CreditCardNumber;
 				chargingAmount = total;
@@ -365,7 +374,7 @@ public:
 				//if the code isn't -1, everything worked smoothly, and display conformation code, TODO: add that to imgui
 				if ((code != -1))
 				{
-					std::cout << "\rConformation Code: " << code << "\n";
+					std::cout << "\r\tConformation Code: " << code << "\n";
 
 					//they made a purchase, so we can remove that charge till next year
 					loggedin->FirstAnnualPurchase = false;
@@ -400,7 +409,7 @@ public:
 					ImGui::SameLine();
 
 				ImGui::Text(cart[i].name.c_str());			//print the item name and the price
-				ImGui::Text(cart[i].price().c_str());
+				ImGui::Text(cart[i].price(loggedin->PremiumAccount).c_str());
 
 				if (!premiumCharge)			//don't let customers remove the premium charge
 				{
@@ -419,6 +428,9 @@ int main()
 {
 	ImGuiStartup* start = new ImGuiStartup(*app);	//initialize imgui settings
 	OnImGuiRender OOSS(*app);
+
+	inventory.push_back(Item("tmp", 1, "temporary", 1000, 100));
+
 
 	getUsers();
 

@@ -11,9 +11,10 @@
     <ClInclude Include="src\app\Window.h" />
     <ClInclude Include="src\ProjectClassFiles\Bank\Bank.h" />
     <ClInclude Include="src\ProjectClassFiles\Users\Users.h" />
+    <ClInclude Include="src\ProjectClassFiles\Items\Item.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\SandboxApp.cpp" />
+    <ClCompile Include="src\OSS.cpp" />
     <ClCompile Include="src\imgui\ImGuiLayer.cpp" />
     <ClCompile Include="src\imgui\ImGuiBuild.cpp" />
     <ClCompile Include="src\app\application.cpp" />

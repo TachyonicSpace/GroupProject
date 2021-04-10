@@ -56,7 +56,6 @@ static void getUsers()
 
 
 		allUsers.push_back({ username, password, (bool)IsAdmin, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
-
 	}
 
 	fclose(in);

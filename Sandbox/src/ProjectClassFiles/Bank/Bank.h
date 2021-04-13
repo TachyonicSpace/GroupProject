@@ -49,21 +49,23 @@ public:
 			bool charged = (*balance >= price);
 			//since booleans equate to 1 or zero if they are true or false, multiplying by the bool will only change value if true
 			*balance -= charged * price;
-			//store a random number
-			int tmp = rand();
-			//set the conformation number to a random value that isnt -1;
-			ConformationNumber = (charged)?((tmp!=-1)?tmp:tmp*-1 ): -1;
+			//increases
+			ConformationNumber = (charged)?cf:-1;
 		}
 		else
+		{
 			ConformationNumber = -1;
+		}
 
 
+		cf++;
 		//set request to false since we processed this
 		Request = false;
 	}
-	unsigned long ConformationNumber = -1;
+	unsigned long ConformationNumber = 1;
 	bool Request = false;
 	std::map<int, int> accounts;
 private:
+	unsigned long cf = 0;
 };
 

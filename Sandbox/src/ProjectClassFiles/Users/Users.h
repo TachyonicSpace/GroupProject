@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "ProjectClassFiles/Items/Item.h"
 
 class Users
 {
@@ -9,6 +10,7 @@ public:
 public:
 	std::string username;
 	std::string password;
+	std::vector<Item> cart;
 	bool IsAdmin = false;
 	std::string address;
 	std::string phone;
@@ -55,7 +57,7 @@ static void getUsers()
 			debuging++;
 
 
-		allUsers.push_back({ username, password, (bool)IsAdmin, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
+		allUsers.push_back({ username, password, {}, (bool)IsAdmin, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
 	}
 
 	fclose(in);
@@ -92,4 +94,14 @@ static void setUsers()
 	}
 
 	fclose(out);
+}
+
+static bool findUsername(std::string username)
+{
+	for (auto& user : allUsers)
+	{
+		if (0 == strcmp(user.username.c_str(), username.c_str()))
+			return true;
+	}
+	return false;
 }

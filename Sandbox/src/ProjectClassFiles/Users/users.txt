@@ -5,8 +5,8 @@ IsAdmin: 1
 address: fdkf st
 phone :903201085
 Credit card number: 10
-Premium Account: 0
-First Annual Purchase: 1
+Premium Account: 1
+First Annual Purchase: 0
 }
 {
 username: c8hi

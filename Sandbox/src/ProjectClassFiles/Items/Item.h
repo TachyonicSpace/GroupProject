@@ -45,3 +45,7 @@ public:
 		return getRegPrice();
 	}
 };
+
+
+//static variable to store the stores inventory.
+static std::vector<Item> inventory;

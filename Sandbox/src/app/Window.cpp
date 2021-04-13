@@ -1,3 +1,6 @@
+//allows us to hide console window
+#include "windows.h"
+
 #include "Window.h"
 #include "iostream"
 
@@ -28,6 +31,8 @@ void Window::Init(const WindowProps& props)
 	m_Data.Width = props.Width;
 	m_Data.Height = props.Height;
 
+	//hides console window since we don't need it
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
 
 	//initialize window
 	if (!s_GLFWInitilized)

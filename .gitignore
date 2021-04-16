@@ -345,7 +345,6 @@ healthchecksdb
 # Directories
 bin/
 bin-int/
-Sandbox/bin-int/
 
-Sandbox/vendor/Glad/bin-int/
-Sandbox/vendor/Glad/bin/
+/Sandbox/vendor/Glad/bin-int/
+/Sandbox/vendor/Glad/bin/

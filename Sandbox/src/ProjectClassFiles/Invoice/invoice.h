@@ -1,8 +1,10 @@
 #pragma once
 #include "ProjectClassFiles/Items/Item.h"
 
-enum status { Processing = 0, Shipped, Pickup };
+//allows us to store the order status
+enum class status { Processing = 0, Shipped, Pickup };
 
+//invoice class storing order information
 class invoice
 {
 public:
@@ -15,7 +17,10 @@ public:
 	unsigned long conformationCode = -1;
 };
 
+//stores all orders on startup
 std::vector<invoice> allOrders;
+
+//gets all orders on startup
 static unsigned long GetAllOrders()
 {
 	//stores all the orders in the order file inside in
@@ -26,15 +31,17 @@ static unsigned long GetAllOrders()
 
 	//while we haven't reached the end of the file
 	while (!feof(in))
-	{		//store account balance
+	{		//store order information
 		char user[5] = { 0 };
 		std::vector<Item> cart;
 		char date[11] = { 0 };
 		int total, card, numberOfItems;
-		int debuging = 0;
 		int premium;
 		int current;
+		//used to check if fscanf cant scan in a variable
+		int debuging = 0;
 
+		//scan in username, if they are a premium account, and how many items are in their cart
 		if (0 == fscanf(in, "{\n\tuser: %4s\n", user))
 			debuging++;
 		if (0 == fscanf(in, "\tprem: %d\n", &premium))
@@ -42,6 +49,7 @@ static unsigned long GetAllOrders()
 		if (0 == fscanf(in, "\tnumber of items %d\n", &numberOfItems))
 			debuging++;
 
+		//loops through the items, and add them to the cart for this order
 		for (int i = 0; i < numberOfItems; i++)
 		{
 			int amount, regPrice, premPrice;
@@ -62,7 +70,7 @@ static unsigned long GetAllOrders()
 			cart.push_back({ name, amount, description, regPrice, premPrice });
 		}
 
-
+		//gets remaining info from file
 		if (0 == fscanf(in, "\tdate: %10s\n", date))
 			debuging++;
 		if (0 == fscanf(in, "\ttotal: %d\n", &total))
@@ -73,18 +81,21 @@ static unsigned long GetAllOrders()
 			debuging++;
 		if (0 == fscanf(in, "\tConformationCode: %lu\n}\n", &conformationCode))
 			debuging++;
+
+		//if debugging wasnt altered, store order in allorders
 		if (debuging == 0)
-			allOrders.push_back({ std::string(user), (bool)premium, cart, std::string(date), total, card, (status)current, conformationCode });			//store the balance inside the map getting map[card number] = balance
-		else
-			1 / debuging;
+			allOrders.push_back({ std::string(user), (bool)premium, cart, std::string(date), total, card, (status)current, conformationCode });			
 	}
 
+	//close file
 	fclose(in);
 
+	//return the highest conformation code to give to banks
 	return conformationCode;
 }
 
 
+//writes all orders to file at end of program
 static void SetAllOrders()
 {
 	//stores all the orders in the order file inside in

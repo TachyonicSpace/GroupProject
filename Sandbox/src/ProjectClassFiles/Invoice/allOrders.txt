@@ -36,6 +36,6 @@
 	date: 03/15/2021
 	total: 1700
 	card#: 10
-	status: 0
+	status: 2
 	ConformationCode: 2
 }

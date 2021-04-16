@@ -3,6 +3,7 @@
 #include <vector>
 #include "ProjectClassFiles/Items/Item.h"
 
+//class to store users, with information like if they are the supplier, and their purchase information
 class Users
 {
 public:
@@ -11,7 +12,7 @@ public:
 	std::string username;
 	std::string password;
 	std::vector<Item> cart;
-	bool IsAdmin = false;
+	bool supplier = false;
 	std::string address;
 	std::string phone;
 	int CreditCardNumber = -1;
@@ -31,7 +32,7 @@ static void getUsers()
 	{		//store account balance
 		char username[5] = "tmp ";
 		char password[5] = "tmp ";
-		int IsAdmin = 0;
+		int supplier = 0;
 		char address[8] = "tmp  st";
 		char phone[11] = "0123456789";
 		int CreditCardNumber = -1;
@@ -43,7 +44,7 @@ static void getUsers()
 			debuging++;
 		if (0 == fscanf(in, "password: %s\n", password))
 			debuging++;
-		if (0 == fscanf(in, "IsAdmin: %d\n", &IsAdmin))
+		if (0 == fscanf(in, "IsAdmin: %d\n", &supplier))
 			debuging++;
 		if (0 == fscanf(in, "address: %s st\n", address))
 			debuging++;
@@ -57,12 +58,13 @@ static void getUsers()
 			debuging++;
 
 
-		allUsers.push_back({ username, password, {}, (bool)IsAdmin, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
+		allUsers.push_back({ username, password, {}, (bool)supplier, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
 	}
 
 	fclose(in);
 }
 
+//sets users after program ends
 static void setUsers()
 {
 	FILE* out = fopen("src\\ProjectClassFiles\\Users\\users.txt", "w");
@@ -76,7 +78,7 @@ static void setUsers()
 			debuging++;
 		if (0 == fprintf(out, "password: %s\n", customer.password.c_str()))
 			debuging++;
-		if (0 == fprintf(out, "IsAdmin: %d\n", customer.IsAdmin))
+		if (0 == fprintf(out, "IsAdmin: %d\n", customer.supplier))
 			debuging++;
 		if (0 == fprintf(out, "address: %s\n", customer.address.c_str()))
 			debuging++;
@@ -96,6 +98,7 @@ static void setUsers()
 	fclose(out);
 }
 
+//returns if the username exist in current users
 static bool findUsername(std::string username)
 {
 	for (auto& user : allUsers)

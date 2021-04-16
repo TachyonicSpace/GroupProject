@@ -5,6 +5,7 @@
 #include "ProjectClassFiles/Bank/Bank.h"
 #include "ProjectClassFiles/Users/Users.h"
 #include "ProjectClassFiles/Items/Item.h"
+#include "ProjectClassFiles/Invoice/invoice.h"
 #include "chrono"
 #include <thread>
 using namespace std::chrono_literals;
@@ -27,6 +28,7 @@ std::thread bankingSystem([&] {
 		//if the bank has a request, charge the amount to the card, else wait
 		if (bank->Request)
 			bank->ChargeAmount(creditCard, total);
+		std::this_thread::sleep_for(2s);
 	}
 	});
 
@@ -41,12 +43,14 @@ public:
 
 	//string we need to store the input text from imgui
 	std::string str = "";
-	//bool to see if we add on a charge for the premium account
-	bool addPremiumPrice = loggedin && loggedin->PremiumAccount && loggedin->FirstAnnualPurchase;
 
-	//bool to see if we are currently adding new customer
-	bool newcust = false, purchaseCart = false;
+	bool addPremiumPrice, verified;
+
+	//bool to see if we are currently adding new customer, and using int so we can store if we are creating a new supplier
+	int newcust = 0;
+	bool purchaseCart = false;
 	std::stringstream output;
+	invoice* selectedOrder = nullptr;
 
 	#define debug
 
@@ -58,6 +62,8 @@ public:
 		//causing std::out to direct to output instead
 		std::streambuf* old = std::cout.rdbuf(output.rdbuf());
 
+		//bool to see if we add on a charge for the premium account
+		addPremiumPrice = loggedin && loggedin->PremiumAccount && loggedin->FirstAnnualPurchase;
 
 		menu();
 
@@ -84,8 +90,6 @@ public:
 
 			#ifdef debug
 			debugSettings();
-			bool b = true;
-			ImGui::ShowDemoWindow(&b);
 			#endif
 		}
 
@@ -153,15 +157,32 @@ public:
 
 			//if the customer is logged in, then they will see these options
 			if (loggedin)
-				selectItems();
+			{
+				if (loggedin->IsAdmin)
+				{
+					processOrder();
+					shipOrder();
+					viewStock();
+				}
+				else
+				{
+					viewInvoice();
+					viewOrder();
+					selectItems();
+				}
+			}
 
 			//if the customer is not logged in, they will see this login screen
 			else if (!newcust)
 				login();
 
 			//making a new account
-			else
+			else if (newcust == 1)
 				createAccount();
+
+			//making a new supplier account
+			else
+				createSupplierAccount();
 
 			ImGui::End();
 
@@ -263,34 +284,38 @@ public:
 			if (loggedin && loggedin->PremiumAccount)
 				checkout = "Premium " + checkout;
 
-			if (ImGui::Button(checkout.c_str()))		//if checking out
-				ImGui::OpenPopup("please choose delivery option?");
-
-			if (ImGui::BeginPopup("please choose delivery option?"))
+			if (loggedin && !loggedin->cart.empty())
 			{
+				if (ImGui::Button(checkout.c_str()))		//if checking out
+					ImGui::OpenPopup("please choose delivery option?");
 
-				purchaseCart |= ImGui::Button("in store pickup?(no additional charge)");
-				if (ImGui::Button("delivery? (with a 3$ delivery fee)"))
+				if (ImGui::BeginPopup("please choose delivery option?"))
 				{
-					purchaseCart = true;
-					loggedin->cart.push_back({ "delivery charge", 1, "delivery charge", 300, 300 });
+
+					purchaseCart |= ImGui::Button("in store pickup?(no additional charge)");
+					if (ImGui::Button("delivery? (with a 3$ delivery fee)"))
+					{
+						purchaseCart = true;
+						loggedin->cart.push_back({ "delivery charge", 1, "delivery charge", 300, 300 });
+					}
+
+					if (purchaseCart)
+						ImGui::CloseCurrentPopup();
+
+					ImGui::EndPopup();
+					creditCard = loggedin->CreditCardNumber;
 				}
-
 				if (purchaseCart)
-					ImGui::CloseCurrentPopup();
+					makeOrder();
 
-				ImGui::EndPopup();
-				creditCard = loggedin->CreditCardNumber;
+
+				ImGui::SameLine();		//display the total loggedin->cart price on the same line as the button
+				ImGui::Text(label.c_str());
+
+
+				ImGui::Separator();		//add a separating line to separate loggedin->cart from total
 			}
-			if (purchaseCart)
-				makeOrder();
 
-
-			ImGui::SameLine();		//display the total loggedin->cart price on the same line as the button
-			ImGui::Text(label.c_str());
-
-
-			ImGui::Separator();		//add a separating line to separate loggedin->cart from total
 
 			for (int i = 0; i < loggedin->cart.size(); i++)		//loop through the loggedin->cart
 			{
@@ -310,14 +335,22 @@ public:
 					ImGui::SameLine();
 
 				ImGui::Text(loggedin->cart[i].name.c_str());			//print the item name and the price
-				ImGui::Text(loggedin->cart[i].price(loggedin->PremiumAccount).c_str());
+
 
 				if (!premiumCharge)			//don't let customers remove the premium charge
 				{
 					ImGui::SameLine();
 					if (ImGui::Button(("remove item?##" + std::to_string(i) + loggedin->cart[i].name).c_str()))
+					{
 						loggedin->cart.erase(loggedin->cart.begin() + i);
+						ImGui::End();
+						return;
+					}
 				}
+
+
+				ImGui::Text(loggedin->cart[i].price(loggedin->PremiumAccount).c_str());
+
 			}
 			ImGui::End();
 		}
@@ -358,7 +391,9 @@ private:
 			}
 		}
 
-		newcust = ImGui::Button("Sign up for new account?");
+		newcust = (ImGui::Button("Sign up for new account?")) ? 1 : 0;
+
+		newcust = (ImGui::Button("Create new supplier account?")) ? 2 : newcust;
 
 	}
 
@@ -389,7 +424,7 @@ private:
 
 			if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && strlen(phone.c_str()) == 10 && strlen(address.c_str()) == 4 && cc > 9 && cc < 100 && ImGui::Button("create account"))
 			{
-				allUsers.push_back({ username, password, {}, newcust = false, address, phone, cc, premium, true });
+				allUsers.push_back({ username, password, {}, (bool)newcust, address, phone, cc, premium, true });
 				loggedin = &allUsers[allUsers.size() - 1];
 
 				//resetting values to empty
@@ -425,7 +460,7 @@ private:
 		{
 			if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && ImGui::Button("create account"))
 			{
-				allUsers.push_back({ username, password, {}, newcust = false, "N/A ", "0000000000", -1, false, true });
+				allUsers.push_back({ username, password, {}, (bool)newcust, "N/A ", "0000000000", -1, false, true });
 				loggedin = &allUsers[allUsers.size() - 1];
 
 				//resetting values to empty
@@ -447,31 +482,37 @@ private:
 		//pointer to see what item we are adding an item to the loggedin->cart
 		Item* enter = nullptr;
 
-		static int priceRange[] = { 0, 0xfffffff };
+		//filter to filter items by name or description
+		static ImGuiTextFilter filter;
+		ImGui::Text("Filter usage:\n"
+			"		         display all lines\n"
+			"  xxx			 display lines containing \"xxx\"\n"
+			"  xxx,yyy		 display lines containing \"xxx\" or \"yyy\"\n"
+			"  -xxx		     hide lines containing \"xxx\"");
+		filter.Draw();
 
-		//filter to filter items by name or discription
-		ImGui::InputText("filter item name & discription", &str[0], 255);
-		ImGui::InputInt2("min and max price filter", priceRange);
 		ImGui::Separator();
 
 		bool first = true;
 		for (auto& item : inventory)
 		{
-			if (item.regPrice > priceRange[0] && item.regPrice < priceRange[1] && (item.name.find(str.c_str()) != std::string::npos || item.discription.find(str.c_str()) != std::string::npos))
+			if (!first)
+				ImGui::Separator();
+
+			if (filter.PassFilter(item.name.c_str()) || filter.PassFilter(item.description.c_str()))
 			{
-				if (!first)
-					ImGui::Separator();
+				ImGui::BulletText("%s\t\nPremium Price: %s, regular price: %s\n\t%s", item.name.c_str(), item.getPremPrice().c_str(),
+					item.getRegPrice().c_str(), item.description.c_str());
 
-				ImGui::Text("%s\t\nPremium Price: %s, regular price: %s\n\t%s", item.name.c_str(), item.getPremPrice().c_str(),
-					item.getRegPrice().c_str(), item.discription.c_str());
-
-				if (ImGui::Button(("add to cart##" + item.name + item.discription).c_str()))
+				if (ImGui::Button(("add to cart##" + item.name + item.description).c_str()))
 				{
 					enter = &item;
 					break;
 				}
 			}
+			first = true;
 		}
+
 
 
 		//a way to randomly generate a unique price, only taking last items memory address if it exist
@@ -534,6 +575,18 @@ private:
 
 			//they made a purchase, so we can remove that charge till next year
 			loggedin->FirstAnnualPurchase = false;
+
+			time_t rawTime;
+			struct tm* timeinfo;
+			time(&rawTime);
+			timeinfo = localtime(&rawTime);
+			std::string date;
+			date += ((timeinfo->tm_mon < 10) ? "0" + std::to_string(timeinfo->tm_mon) : "" + std::to_string(timeinfo->tm_mon)) + "/";
+			date += ((timeinfo->tm_mday < 10) ? "0" + std::to_string(timeinfo->tm_mday) : "" + std::to_string(timeinfo->tm_mday)) + "/";
+			date += std::to_string(timeinfo->tm_year + 1900);
+
+			allOrders.push_back({ loggedin->username, loggedin->PremiumAccount, loggedin->cart, date, total, loggedin->CreditCardNumber, status::Processing, bank->ConformationNumber });
+
 			//empty their loggedin->cart TODO: add the loggedin->cart to their order history
 			loggedin->cart.clear();
 		}
@@ -546,9 +599,49 @@ private:
 	//customer
 	void viewOrder()
 	{
-		//TODO
 		ImGui::Begin("Show Order");
 		{
+			static invoice* currentOrder = nullptr;
+			ImGui::Text((loggedin->username + "'s order history").c_str());
+
+			ImGui::Separator();
+			int numOrders = 0;
+			for (auto& order : allOrders)
+			{
+				if (strcmp(order.user.c_str(), loggedin->username.c_str()) == 0)
+				{
+					numOrders += 1;
+					std::string str = "order number #" + std::to_string(order.conformationCode) + "\n{\n";
+					for (auto item : order.cart)
+					{
+						str += "\tyou ordered: " + std::to_string(item.amount) + " - " + item.name + " @ " + GetPrice((order.premium) ? item.premPrice : item.regPrice) + "\n";
+					}
+					str += "}\nstatus: ";
+					switch (order.currentStatus)
+					{
+					case Processing:
+						str += "Processing";
+						break;
+					case Shipped:
+						str += "Shipped";
+						break;
+					case Pickup:
+						str += "Ready for Pickup";
+						break;
+					}
+					bool selected = false;
+					ImGui::Selectable(str.c_str(), &selected);
+					if (selected)
+					{
+						selectedOrder = &order;
+						verified = false;
+					}
+					ImGui::Separator();
+				}
+			}
+			if (numOrders == 0)
+				ImGui::Text("sorry, we don't have any orders for you, but when you do make an order, it will appear here.");
+
 			ImGui::End();
 		}
 	}
@@ -557,11 +650,43 @@ private:
 	void viewInvoice()
 	{
 		//TODO:
-		ImGui::Begin("Invoices");
+		ImGui::Begin("Invoice");
+		if (selectedOrder)
 		{
-			ImGui::End();
+			ImGui::Text(("order #" + std::to_string(selectedOrder->conformationCode) + " details").c_str());
+
+			ImGui::Separator();
+
+
+			std::string str = selectedOrder->date + "\n" + std::to_string(selectedOrder->card) + "\n\n{\n";
+			for (auto item : selectedOrder->cart)
+			{
+				str += "\tyou ordered: " + std::to_string(item.amount) + " - " + item.name + " @ " + GetPrice((selectedOrder->premium) ? item.premPrice : item.regPrice) + "\n";
+			}
+			str += "}\nstatus: ";
+			switch (selectedOrder->currentStatus)
+			{
+			case Processing:
+				str += "Processing";
+				break;
+			case Shipped:
+				str += "Shipped";
+				break;
+			case Pickup:
+				str += "Ready for Pickup";
+				break;
+			}
+
+			ImGui::TextWrapped(str.c_str());
+			ImGui::Separator();
+			if (ImGui::Button("clear order details?"))
+				selectedOrder = nullptr;
 		}
+		ImGui::End();
+
 	}
+
+
 
 	//supplier
 	void processOrder()
@@ -590,19 +715,25 @@ int main()
 
 	inventory.push_back(Item("tmp", 1, "temporary", 1000, 100));
 
-
+	bank->cf = GetAllOrders();
 	getUsers();
 
 	while (app->m_Running)	//loop until we stop application
 
 	{
+		if (loggedin && loggedin->PremiumAccount)
+			ImGui::StyleColorsClassic();
+		else
+			ImGui::StyleColorsDark();
+
 		start->Begin();		//begin imgui render pass
 		OOSS.onUpdate();
 		start->End();		//render everything we did in above function
 	}
 	bankingSystem.join();	//wait for the thread to finish before exiting
 
-	setUsers();
+	//setUsers();
+	SetAllOrders();
 
 	//memory cleanup
 	delete app;
@@ -611,14 +742,7 @@ int main()
 
 /*TODO
 
-Store order, stock, catalog in files
-
-create supplier account is only takes user and password
-
-store all purchase in a file, regardless of account,
-			map with conformation number as key?
-
-allow customer to view all their orders and order status
+Store stock, catalog in files
 
 view invoice, with date, items, amount and payment info
 

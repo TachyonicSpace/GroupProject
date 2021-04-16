@@ -1,25 +1,13 @@
 #pragma once
 #include <string>
+#include <vector>
 
-
-class Item
+static std::string GetPrice(int p)
 {
-public:
-	std::string name;
-	int amount;
-	std::string discription;
-	int regPrice, premPrice;
+	return "$" + std::to_string(p / 100) + "." + std::to_string(p % 100);
+}
 
-	Item(std::string _name, int _quantity, std::string _discription, int _regPrice, int _premprice)
-		:name(_name), amount(_quantity), discription(_discription), regPrice(_regPrice), premPrice(_premprice)
-	{}
-
-	static std::string GetPrice(int p)
-	{
-		return "$" + std::to_string(p / 100) + "." + std::to_string(p % 100);
-	}
-
-	static int GetPrice(std::string p)
+static int GetPrice(std::string p)
 	{
 		int total = 0;
 		p = p.substr(1);
@@ -27,6 +15,19 @@ public:
 		total += std::stoi(p) * 100;
 		return total;;
 	}
+
+
+class Item
+{
+public:
+	std::string name;
+	int amount;
+	std::string description;
+	int regPrice, premPrice;
+
+	Item(std::string _name, int _quantity, std::string _discription, int _regPrice, int _premprice)
+		:name(_name), amount(_quantity), description(_discription), regPrice(_regPrice), premPrice(_premprice)
+	{}
 
 	std::string getRegPrice()
 	{

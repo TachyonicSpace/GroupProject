@@ -1,7 +1,7 @@
 {
 username: r52q
 password: kuvn
-IsAdmin: 1
+IsAdmin: 0
 address: fdkf st
 phone :903201085
 Credit card number: 10
@@ -51,7 +51,7 @@ First Annual Purchase: 0
 {
 username: 73qk
 password: imkk
-IsAdmin: 0
+IsAdmin: 1
 address: yeux st
 phone :632084427
 Credit card number: 15

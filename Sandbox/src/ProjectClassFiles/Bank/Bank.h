@@ -41,6 +41,8 @@ public:
 			}
 		}
 
+		//tracks total number of orders taken place, used as conformation number if purchase is sucessfull
+		cf++;
 
 		//if we found the card, try and charge them, else set the conformation number to -1
 		if (found)
@@ -58,14 +60,12 @@ public:
 		}
 
 
-		cf++;
 		//set request to false since we processed this
 		Request = false;
 	}
 	unsigned long ConformationNumber = 1;
 	bool Request = false;
 	std::map<int, int> accounts;
-private:
 	unsigned long cf = 0;
 };
 

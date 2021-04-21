@@ -2,7 +2,7 @@
 #include "ProjectClassFiles/Items/Item.h"
 
 //allows us to store the order status
-enum class status { Processing = 0, Shipped, Pickup };
+enum class status { Ordered = -1, Ready, Shipped, Pickup };
 
 //invoice class storing order information
 class invoice

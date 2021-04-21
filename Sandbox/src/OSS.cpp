@@ -56,7 +56,7 @@ public:
 	std::stringstream output;
 
 	//TODO remove
-	#define debug
+#define debug
 
 	OnImGuiRender(Application& App)
 		:app(App) {}
@@ -99,9 +99,9 @@ public:
 			store();
 			shoppingCart();
 
-			#ifdef debug
+#ifdef debug
 			debugSettings();
-			#endif
+#endif
 		}
 
 
@@ -283,6 +283,7 @@ public:
 				return;
 			}
 			//add together all the prices of the loggedin->cart
+			total = 0;
 			for (auto& item : loggedin->cart)
 			{
 				auto p = item.price(loggedin->PremiumAccount).substr(1);
@@ -313,7 +314,7 @@ public:
 					if (ImGui::Button("delivery? (with a 3$ delivery fee)"))
 					{
 						purchaseCart = true;
-						loggedin->cart.push_back({ "delivery charge", 1, "delivery charge", 300, 300 });
+						loggedin->cart.emplace(loggedin->cart.begin(), Item("delivery charge", 1, "delivery charge", 300, 300));
 					}
 
 					//if selected item, close popup menu
@@ -350,26 +351,16 @@ public:
 					ImGui::InputInt(label.c_str(), &loggedin->cart[i].amount);
 				loggedin->cart[i].amount = __max(loggedin->cart[i].amount, 0);			//ensure not to get negative items
 
-
-				if (!premiumCharge)			//if we aren't putting the input int, we don't need the same line
-					ImGui::SameLine();
-
-				ImGui::Text(loggedin->cart[i].name.c_str());			//print the item name and the price
-
-
-				if (!premiumCharge)			//don't let customers remove the premium charge
+				if (loggedin->cart[i].amount == 0)
 				{
-					ImGui::SameLine();
-					if (ImGui::Button(("remove item?##" + std::to_string(i) + loggedin->cart[i].name).c_str()))
-					{
-						loggedin->cart.erase(loggedin->cart.begin() + i);
-						ImGui::End();
-						return;
-					}
+					loggedin->cart.erase(loggedin->cart.begin() + i);
+					ImGui::End();
+					return;
 				}
+				if (premiumCharge)			//if we aren't putting the input int, we don't need the same line
+					ImGui::SameLine();
 
-				//display the item price
-				ImGui::Text(loggedin->cart[i].price(loggedin->PremiumAccount).c_str());
+				ImGui::Text((loggedin->cart[i].name + " \n\t" + loggedin->cart[i].price(loggedin->PremiumAccount)).c_str());
 
 			}
 			ImGui::End();
@@ -429,7 +420,7 @@ private:
 		ImGui::InputTextWithHint("username", "please enter a new 4 digit username", &username[0], 5);
 		ImGui::InputTextWithHint("password", "please enter a new 4 digit password", &password[0], 5);
 		ImGui::InputTextWithHint("confirm password", "please confirm your 4 digit password", &password0[0], 5);
-		
+
 		//if username exist, inform customer
 		if (findUsername(username))
 			ImGui::TextColored({ 1, .2f, .36f, 1 }, "\tUsername already in use, please enter another one");
@@ -505,7 +496,7 @@ private:
 		}
 	}
 
-	//customer todo
+	//customer
 	void selectItems()
 	{
 		//pointer to see what item we are adding an item to the loggedin->cart
@@ -530,8 +521,10 @@ private:
 
 			if (filter.PassFilter(item.name.c_str()) || filter.PassFilter(item.description.c_str()))
 			{
-				ImGui::BulletText("%s\t\nPremium Price: %s, regular price: %s\n\t%s", item.name.c_str(), item.getPremPrice().c_str(),
-					item.getRegPrice().c_str(), item.description.c_str());
+				ImGui::BulletText(item.name.c_str());
+				ImGui::TextColored({ .2, .89, .3, 1 }, "\tPremium Price: %s", GetPrice(item.premPrice).c_str()); ImGui::SameLine();
+				ImGui::TextColored({ .89, .2, .43, 1 }, "\tRegular Price: %s", GetPrice(item.regPrice).c_str());
+				ImGui::TextColored({ .2, .12, .82, 1 }, "\t%s", item.description.c_str());
 
 				if (ImGui::Button(("add to cart##" + item.name + item.description).c_str()))
 				{
@@ -541,11 +534,6 @@ private:
 			}
 			first = true;
 		}
-
-
-
-		//a way to randomly generate a unique price, only taking last items memory address if it exist
-		void* p = loggedin->cart.empty() ? &str : (void*)&loggedin->cart[loggedin->cart.size() - 1];
 
 		//loop through loggedin->cart items
 		for (auto& item : loggedin->cart)
@@ -576,7 +564,7 @@ private:
 		}
 		//if added item is not found, add it to loggedin->cart, but keep price between 1000 pennies, or $10
 		if (enter)
-			loggedin->cart.push_back(*enter);
+			loggedin->cart.push_back({ enter->name, 1, enter->description, enter->regPrice, enter->premPrice });
 		//if we need to add the premium charge to account, add it here
 		if (addPremiumPrice)
 			loggedin->cart.emplace(loggedin->cart.begin(), Item("Premium account First Time Annual Charge", 1, "a charge placed on your card \nfor being a premium member, \nallowing you to get the cheaper \nprices at checkout.", 4000, 4000));
@@ -614,7 +602,7 @@ private:
 			date += ((timeinfo->tm_mday < 10) ? "0" + std::to_string(timeinfo->tm_mday) : "" + std::to_string(timeinfo->tm_mday)) + "/";
 			date += std::to_string(timeinfo->tm_year + 1900);
 
-			allOrders.push_back({ loggedin->username, loggedin->PremiumAccount, loggedin->cart, date, total, loggedin->CreditCardNumber, status::Processing, bank->ConformationNumber });
+			allOrders.push_back({ loggedin->username, loggedin->PremiumAccount, loggedin->cart, date, total, loggedin->CreditCardNumber, status::Ordered, bank->ConformationNumber });
 
 			//empty their loggedin->cart TODO: add the loggedin->cart to their order history
 			loggedin->cart.clear();
@@ -686,8 +674,8 @@ private:
 					str += "}\nstatus: ";
 					switch (order.currentStatus)
 					{
-					case status::Processing:
-						str += "Processing";
+					case status::Ready:
+						str += "Ready";
 						break;
 					case status::Shipped:
 						str += "Shipped";
@@ -716,7 +704,6 @@ private:
 	//customer
 	void viewInvoice()
 	{
-		//TODO:
 		ImGui::Begin("Invoice");
 		if (selectedOrder)
 		{
@@ -733,8 +720,8 @@ private:
 			str += "}\nstatus: ";
 			switch (selectedOrder->currentStatus)
 			{
-			case status::Processing:
-				str += "Processing";
+			case status::Ready:
+				str += "Ready";
 				break;
 			case status::Shipped:
 				str += "Shipped";
@@ -758,13 +745,86 @@ private:
 	//supplier
 	void processOrder()
 	{
-
+		ImGui::Begin("Process orders");
+		ImGui::End();
 	}
 
 	//supplier
 	void shipOrder()
 	{
+		ImGui::Begin("ship orders");
 
+		static char* showingStatus[4] = { "all", "Ready", "Shipped", "ready for pickup" };
+		static std::string currentShowingStatus = showingStatus[0];
+		static status* statusFilter = nullptr;
+
+		static invoice* currentOrder = nullptr;
+
+
+		ImGui::SameLine();
+		ImGui::Text(" orders");
+
+
+		ImGui::Separator();
+		int numOrders = 0;
+		for (auto& order : allOrders)
+		{
+			bool selected = false;
+
+			if (!statusFilter || *statusFilter == order.currentStatus)
+			{
+				numOrders += 1;
+				std::string str = "order number #" + std::to_string(order.conformationCode) + "\n{\n";
+				for (auto item : order.cart)
+				{
+					str += "\tordered: " + std::to_string(item.amount) + " - " + item.name + " @ " + GetPrice((order.premium) ? item.premPrice : item.regPrice) + "\n";
+				}
+				str += "}";
+				ImGui::Text(str.c_str());
+				str = "order Status: ";
+				switch (order.currentStatus)
+				{
+				case status::Ready:
+					str += "Ready";
+
+					if (ImGui::BeginCombo(str.c_str(), ""))
+					{
+						if (strcmp(order.cart[0].name.c_str(), "delivery charge") == 0)
+						{
+							if (ImGui::Selectable("Ship Order to Customer"))
+							{
+								order.currentStatus = status::Shipped;
+							}
+						}
+						else
+						{
+							if (ImGui::Selectable("Ready For Pickup?"))
+							{
+								order.currentStatus = status::Pickup;
+							}
+						}
+						ImGui::EndCombo();
+					}
+
+
+
+					break;
+				case status::Shipped:
+					str += "Shipped";
+					ImGui::Text(str.c_str());
+					break;
+				case status::Pickup:
+					str += "Ready for Pickup";
+					ImGui::Text(str.c_str());
+					break;
+				}
+				ImGui::Separator();
+			}
+		}
+		if (numOrders == 0)
+			ImGui::Text(("sorry, we don't have any " + currentShowingStatus + " orders for you, but they will appear here.").c_str());
+
+		ImGui::End();
 	}
 
 	//supplier
@@ -780,7 +840,7 @@ int main()
 	ImGuiStartup* start = new ImGuiStartup(*app);	//initialize imgui settings
 	OnImGuiRender OOSS(*app);
 
-	inventory.push_back(Item("tmp", 1, "temporary", 1000, 100));
+	GetInventory();
 
 	bank->cf = GetAllOrders();
 	getUsers();
@@ -801,6 +861,7 @@ int main()
 
 	//setUsers();
 	SetAllOrders();
+	SetInventory();
 
 	//memory cleanup
 	delete app;
@@ -809,11 +870,15 @@ int main()
 
 /*TODO
 
-Store stock, catalog in files
+Remove items from inventory if money removed
 
 
 process order (manually from supplier(admin))
 ship order (manually from supplier(admin))
+view stock
+
+Evan:
+forgot quantity in items.txt, input prices as dollars, not pennies, left extra lines between some of the items in txt didnt look over code before proceeding
 
 
 */

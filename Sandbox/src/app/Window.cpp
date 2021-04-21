@@ -37,7 +37,6 @@ void Window::Init(const WindowProps& props)
 	//initialize window
 	if (!s_GLFWInitilized)
 	{
-		//TODO: glfwTerminate on system shutdown
 		int success = glfwInit();
 		if (!success)
 		{

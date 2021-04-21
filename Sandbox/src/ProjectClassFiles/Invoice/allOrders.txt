@@ -12,7 +12,7 @@
 	date: 01/01/0001
 	total: 100
 	card#: 10
-	status: 0
+	status: 2
 	ConformationCode: 1
 }
 {
@@ -38,4 +38,21 @@
 	card#: 10
 	status: 2
 	ConformationCode: 2
+}
+{
+	user: r52q
+	prem: 1
+	number of items 1
+	[
+		name: Houselamp
+		quantity: 3
+		description: Table side lamp for your home
+		regular price: 2000
+		premium price: 1800
+	]
+	date: 03/19/2021
+	total: 5400
+	card#: 10
+	status: 0
+	ConformationCode: 4
 }

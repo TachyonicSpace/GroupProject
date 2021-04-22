@@ -25,6 +25,6 @@
     <Text Include="src\ProjectClassFiles\Bank\Accounts.txt" />
     <Text Include="src\ProjectClassFiles\Users\users.txt" />
     <Text Include="src\ProjectClassFiles\Invoice\allOrders.txt" />
-    <Text Include="src\ProjectClassFiles\Items\Items.txt" />
+    <Text Include="src\ProjectClassFiles\Items\Inventory.txt" />
   </ItemGroup>
 </Project>

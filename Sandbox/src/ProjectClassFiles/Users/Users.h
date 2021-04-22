@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "ProjectClassFiles/Items/Item.h"
+#include "Item.h"
 
 //class to store users, with information like if they are the supplier, and their purchase information
 class Users

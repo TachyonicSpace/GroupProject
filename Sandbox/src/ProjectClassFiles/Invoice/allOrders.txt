@@ -5,6 +5,7 @@
 	[
 		name: tmp
 		quantity: 1
+reserved: 0
 		description: temporary
 		regular price: 1000
 		premium price: 100
@@ -16,43 +17,20 @@
 	ConformationCode: 1
 }
 {
-	user: c8hi
-	prem: 0
-	number of items 2
-	[
-		name: tmp
-		quantity: 17
-		description: temporary
-		regular price: 1000
-		premium price: 100
-	]
-	[
-		name: delivery charge
-		quantity: 1
-		description: delivery charge
-		regular price: 300
-		premium price: 300
-	]
-	date: 03/15/2021
-	total: 1700
-	card#: 10
-	status: 2
-	ConformationCode: 2
-}
-{
 	user: r52q
 	prem: 1
 	number of items 1
 	[
 		name: Houselamp
-		quantity: 3
+		quantity: 1
+reserved: 0
 		description: Table side lamp for your home
 		regular price: 2000
 		premium price: 1800
 	]
-	date: 03/19/2021
-	total: 5400
+	date: 03/20/2021
+	total: 1800
 	card#: 10
 	status: 0
-	ConformationCode: 4
+	ConformationCode: 7
 }

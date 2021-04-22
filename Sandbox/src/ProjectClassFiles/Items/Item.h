@@ -22,12 +22,12 @@ class Item
 {
 public:
 	std::string name;
-	int amount;
+	int amount, reserved;
 	std::string description;
 	int regPrice, premPrice;
 
-	Item(std::string _name, int _quantity, std::string _discription, int _regPrice, int _premprice)
-		:name(_name), amount(_quantity), description(_discription), regPrice(_regPrice), premPrice(_premprice)
+	Item(std::string _name, int _quantity, int _reserved, std::string _discription, int _regPrice, int _premprice)
+		:name(_name), amount(_quantity), reserved(_reserved), description(_discription), regPrice(_regPrice), premPrice(_premprice)
 	{}
 
 	//return total price for given amount for regular accounts
@@ -60,7 +60,7 @@ static std::vector<Item> inventory;
 static void GetInventory()
 {
 	//stores all the items in the order file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Items\\Items.txt", "r");
+	FILE* in = fopen("src\\ProjectClassFiles\\Items\\Inventory.txt", "r");
 
 	//while we haven't reached the end of the file
 	while (!feof(in))
@@ -71,13 +71,15 @@ static void GetInventory()
 		int debuging = 0;
 
 
-		int amount, regPrice, premPrice;
+		int amount, reserved, regPrice, premPrice;
 		char name[51] = { 0 }, description[501] = { 0 };
 
 
 		if (0 == fscanf(in, "{\nname: %50[^\n]\n", name))
 			debuging++;
 		if (0 == fscanf(in, "quantity: %d\n", &amount))
+			debuging++;
+		if (0 == fscanf(in, "reserved: %d\n", &reserved))
 			debuging++;
 		if (0 == fscanf(in, "description: %500[^\n]\n", description))
 			debuging++;
@@ -88,7 +90,7 @@ static void GetInventory()
 
 		//if debugging wasnt altered, store order in allorders
 		if (debuging == 0)
-			inventory.push_back({ name, amount, description, regPrice, premPrice });
+			inventory.push_back({ name, amount, 100+reserved, description, regPrice, premPrice });
 		else
 			debuging--;
 	}
@@ -102,7 +104,7 @@ static void GetInventory()
 static void SetInventory()
 {
 	//stores all the orders in the order file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Items\\Items.txt", "w");
+	FILE* in = fopen("src\\ProjectClassFiles\\Items\\Inventory.txt", "w");
 
 	//while we haven't reached the end of the file
 			//store item information
@@ -114,6 +116,8 @@ static void SetInventory()
 		if (0 == fprintf(in, "{\nname: %s\n", item.name.c_str()))
 			debuging++;
 		if (0 == fprintf(in, "quantity: %d\n", item.amount))
+			debuging++;
+		if (0 == fprintf(in, "reserved: %d\n", item.reserved))
 			debuging++;
 		if (0 == fprintf(in, "description: %s\n", item.description.c_str()))
 			debuging++;

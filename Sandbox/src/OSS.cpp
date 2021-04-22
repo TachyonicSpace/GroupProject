@@ -2,10 +2,10 @@
 
 #include "imgui.h"
 #include "iostream"
-#include "ProjectClassFiles/Bank/Bank.h"
-#include "ProjectClassFiles/Users/Users.h"
-#include "ProjectClassFiles/Items/Item.h"
-#include "ProjectClassFiles/Invoice/invoice.h"
+#include "Bank.h"
+#include "Users.h"
+#include "Item.h"
+#include "invoice.h"
 #include "chrono"
 #include <thread>
 using namespace std::chrono_literals;
@@ -204,6 +204,7 @@ public:
 		}
 	}
 
+#ifdef debug
 	//TODO remove
 	void debugSettings()
 	{
@@ -268,7 +269,7 @@ public:
 		}
 		ImGui::End();
 	}
-
+#endif
 	//shows all items in cart
 	void shoppingCart()
 	{
@@ -314,7 +315,7 @@ public:
 					if (ImGui::Button("delivery? (with a 3$ delivery fee)"))
 					{
 						purchaseCart = true;
-						loggedin->cart.emplace(loggedin->cart.begin(), Item("delivery charge", 1, "delivery charge", 300, 300));
+						loggedin->cart.emplace(loggedin->cart.begin(), Item("delivery charge", 1, 0, "delivery charge", 300, 300));
 					}
 
 					//if selected item, close popup menu
@@ -564,10 +565,10 @@ private:
 		}
 		//if added item is not found, add it to loggedin->cart, but keep price between 1000 pennies, or $10
 		if (enter)
-			loggedin->cart.push_back({ enter->name, 1, enter->description, enter->regPrice, enter->premPrice });
+			loggedin->cart.push_back({ enter->name, 1, 0, enter->description, enter->regPrice, enter->premPrice });
 		//if we need to add the premium charge to account, add it here
 		if (addPremiumPrice)
-			loggedin->cart.emplace(loggedin->cart.begin(), Item("Premium account First Time Annual Charge", 1, "a charge placed on your card \nfor being a premium member, \nallowing you to get the cheaper \nprices at checkout.", 4000, 4000));
+			loggedin->cart.emplace(loggedin->cart.begin(), Item("Premium account First Time Annual Charge", 1, 0, "a charge placed on your card \nfor being a premium member, \nallowing you to get the cheaper \nprices at checkout.", 4000, 4000));
 	}
 
 	//customer, bank
@@ -665,6 +666,7 @@ private:
 			{
 				if (strcmp(order.user.c_str(), loggedin->username.c_str()) == 0 && (!statusFilter || *statusFilter == order.currentStatus))
 				{
+					ImGui::Separator();
 					numOrders += 1;
 					std::string str = "order number #" + std::to_string(order.conformationCode) + "\n{\n";
 					for (auto item : order.cart)
@@ -691,7 +693,6 @@ private:
 						selectedOrder = &order;
 						verified = false;
 					}
-					ImGui::Separator();
 				}
 			}
 			if (numOrders == 0)
@@ -746,7 +747,41 @@ private:
 	void processOrder()
 	{
 		ImGui::Begin("Process orders");
+
+		Item* enter = nullptr;
+
+		static invoice* currentOrder = nullptr;
+
+		for (auto& order : allOrders) {
+			if (order.currentStatus == status::Ordered) {
+
+				std::string str = "order number #" + std::to_string(order.conformationCode) + "\n{\n";
+				for (auto item : order.cart)
+				{
+					str += "\tyou ordered: " + std::to_string(item.amount) + " - " + item.name + " @ " + GetPrice((order.premium) ? item.premPrice : item.regPrice) + "\n";
+				}
+				str += "}\nstatus: ordered";
+
+				if (ImGui::Selectable(str.c_str())) {
+					std::string str = "order number #" + std::to_string(order.conformationCode) + "\n{\n";
+
+					for (auto& item : order.cart) {
+						for (auto& iItem : inventory) {
+							if (strcmp(item.name.c_str(), iItem.name.c_str()) == 0) {
+								iItem.amount -= item.amount;
+								iItem.reserved += item.amount;
+							}
+						}
+
+					}
+					std::cout << "Order has been made.";
+
+					order.currentStatus = status::Ready;
+				}
+			}
+		}
 		ImGui::End();
+
 	}
 
 	//supplier
@@ -784,6 +819,7 @@ private:
 				str = "order Status: ";
 				switch (order.currentStatus)
 				{
+				case status::Ordered:
 				case status::Ready:
 					str += "Ready";
 
@@ -803,6 +839,20 @@ private:
 								order.currentStatus = status::Pickup;
 							}
 						}
+						if (order.currentStatus != status::Ordered && order.currentStatus != status::Ready)
+						{
+							for (auto& items : inventory)
+							{
+								for (auto& myItems : order.cart)
+								{
+									if (strcmp(items.name.c_str(), myItems.name.c_str()) == 0)
+									{
+										items.reserved -= myItems.amount;
+									}
+								}
+							}
+						}
+
 						ImGui::EndCombo();
 					}
 
@@ -831,6 +881,27 @@ private:
 	void viewStock()
 	{
 
+		ImGui::Separator();
+		for (auto& item : inventory)
+		{
+			bool first = true;
+			if (!first)
+				ImGui::Separator();
+
+			if (first == true)
+			{
+				ImGui::BulletText(item.name.c_str());
+				ImGui::TextColored({ .2, .89, .3, 1 }, "\tPremium Price: %s", GetPrice(item.premPrice).c_str());
+				ImGui::TextColored({ .89, .2, .43, 1 }, "\tRegular Price: %s", GetPrice(item.regPrice).c_str());
+				ImGui::TextColored({ .2, .12, .82, 1 }, "\t%s", item.description.c_str());
+				ImGui::InputInt(("Available Stock##" + item.name).c_str(), &item.amount);
+				ImGui::Text("Reserved Stock: %d", item.reserved);
+				ImGui::Text("total stock: %d", item.amount + item.reserved);
+
+				ImGui::Separator();
+			}
+			first = true;
+		}
 	}
 
 };
@@ -860,8 +931,8 @@ int main()
 	bankingSystem.join();	//wait for the thread to finish before exiting
 
 	//setUsers();
-	SetAllOrders();
-	SetInventory();
+	//SetAllOrders();
+	//SetInventory();
 
 	//memory cleanup
 	delete app;
@@ -871,14 +942,5 @@ int main()
 /*TODO
 
 Remove items from inventory if money removed
-
-
-process order (manually from supplier(admin))
-ship order (manually from supplier(admin))
-view stock
-
-Evan:
-forgot quantity in items.txt, input prices as dollars, not pennies, left extra lines between some of the items in txt didnt look over code before proceeding
-
 
 */

@@ -1,5 +1,5 @@
 #pragma once
-#include "ProjectClassFiles/Items/Item.h"
+#include "Item.h"
 
 //allows us to store the order status
 enum class status { Ordered = -1, Ready, Shipped, Pickup };
@@ -35,7 +35,7 @@ static unsigned long GetAllOrders()
 		char user[5] = { 0 };
 		std::vector<Item> cart;
 		char date[11] = { 0 };
-		int total, card, numberOfItems;
+		int total, card, numberOfItems, reserved;
 		int premium;
 		int current;
 		//used to check if fscanf cant scan in a variable
@@ -60,6 +60,8 @@ static unsigned long GetAllOrders()
 				debuging++;
 			if (0 == fscanf(in, "\tquantity: %d\n", &amount))
 				debuging++;
+			if (0 == fscanf(in, "\treserved: %d\n", &reserved))
+				debuging++;
 			if (0 == fscanf(in, "\tdescription: %500[^\n]\n", description))
 				debuging++;
 			if (0 == fscanf(in, "\tregular price: %d\n", &regPrice))
@@ -67,7 +69,7 @@ static unsigned long GetAllOrders()
 			if (0 == fscanf(in, "\tpremium price: %d\n]\n", &premPrice))
 				debuging++;
 
-			cart.push_back({ name, amount, description, regPrice, premPrice });
+			cart.push_back({ name, amount, reserved, description, regPrice, premPrice });
 		}
 
 		//gets remaining info from file
@@ -119,6 +121,8 @@ static void SetAllOrders()
 			if (0 == fprintf(in, "\t[\n\t\tname: %s\n", order.cart[i].name.c_str()))
 				debuging++;
 			if (0 == fprintf(in, "\t\tquantity: %d\n", order.cart[i].amount))
+				debuging++;
+			if (0 == fprintf(in, "reserved: %d\n", order.cart[i].reserved))
 				debuging++;
 			if (0 == fprintf(in, "\t\tdescription: %s\n", order.cart[i].description.c_str()))
 				debuging++;

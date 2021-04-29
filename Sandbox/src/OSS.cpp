@@ -706,14 +706,14 @@ private:
 	void viewInvoice()
 	{
 		ImGui::Begin("Invoice");
-		if (selectedOrder)
+		if (selectedOrder && strcmp(selectedOrder->user.c_str(), loggedin->username.c_str()) == 0)
 		{
 			ImGui::Text(("order #" + std::to_string(selectedOrder->conformationCode) + " details").c_str());
 
 			ImGui::Separator();
 
 
-			std::string str = selectedOrder->date + "\n" + std::to_string(selectedOrder->card) + "\n\n{\n";
+			std::string str = selectedOrder->date + "\nCard number: " + std::to_string(selectedOrder->card) + "\nTotal: " + GetPrice(selectedOrder->total) + "\n{\n";
 			for (auto item : selectedOrder->cart)
 			{
 				str += "\tyou ordered: " + std::to_string(item.amount) + " - " + item.name + " @ " + GetPrice((selectedOrder->premium) ? item.premPrice : item.regPrice) + "\n";
@@ -721,6 +721,8 @@ private:
 			str += "}\nstatus: ";
 			switch (selectedOrder->currentStatus)
 			{
+			case status::Ordered:
+				str += "Ordered, In Processing";
 			case status::Ready:
 				str += "Ready";
 				break;
@@ -919,10 +921,12 @@ int main()
 	while (app->m_Running)	//loop until we stop application
 
 	{
-		if (loggedin && loggedin->PremiumAccount)
-			ImGui::StyleColorsClassic();
-		else
+		if (!loggedin)
 			ImGui::StyleColorsDark();
+		else if (loggedin->supplier)
+			ImGui::StyleColorsLight();
+		else
+			ImGui::StyleColorsClassic();
 
 		start->Begin();		//begin imgui render pass
 		OOSS.onUpdate();
@@ -930,17 +934,17 @@ int main()
 	}
 	bankingSystem.join();	//wait for the thread to finish before exiting
 
-	//setUsers();
-	//SetAllOrders();
-	//SetInventory();
+	setUsers();
+	SetAllOrders();
+	SetInventory();
 
 	//memory cleanup
 	delete app;
 	delete start;
+	bank->~Bank();
 }
 
 /*TODO
 
-Remove items from inventory if money removed
-
+wait for komal to finish
 */

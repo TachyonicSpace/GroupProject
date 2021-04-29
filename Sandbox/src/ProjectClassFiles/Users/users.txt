@@ -1,6 +1,39 @@
 {
 username: r52q
 password: kuvn
+number of items 4
+[
+	name: Houselamp
+	quantity: 1
+	reserved: 0
+	description: Table side lamp for your home
+	regular price: 2000
+	premium price: 1800
+]
+[
+	name: Samsung Fridge
+	quantity: 1
+	reserved: 0
+	description: New smart fridge from samsung
+	regular price: 180000
+	premium price: 162000
+]
+[
+	name: Electric Stovetop Oven
+	quantity: 1
+	reserved: 0
+	description: Stovetop 1800W electrice oven
+	regular price: 300000
+	premium price: 270000
+]
+[
+	name: Coffe table
+	quantity: 1
+	reserved: 0
+	description: Redwood coffee table with nice finsih
+	regular price: 7700
+	premium price: 6900
+]
 IsAdmin: 0
 address: fdkf st
 phone :903201085
@@ -11,6 +44,7 @@ First Annual Purchase: 0
 {
 username: c8hi
 password: gqtj
+number of items 0
 IsAdmin: 0
 address: yd51 st
 phone :114410273
@@ -21,6 +55,7 @@ First Annual Purchase: 0
 {
 username: ybcq
 password: xky1
+number of items 0
 IsAdmin: 0
 address: jt61 st
 phone :950444390
@@ -31,6 +66,7 @@ First Annual Purchase: 0
 {
 username: 1yhl
 password: xq1i
+number of items 0
 IsAdmin: 0
 address: ilt2 st
 phone :814967646
@@ -41,6 +77,7 @@ First Annual Purchase: 1
 {
 username: 0k2r
 password: 1s16
+number of items 0
 IsAdmin: 0
 address: fyjj st
 phone :998845625
@@ -51,6 +88,7 @@ First Annual Purchase: 0
 {
 username: 73qk
 password: imkk
+number of items 0
 IsAdmin: 1
 address: yeux st
 phone :632084427

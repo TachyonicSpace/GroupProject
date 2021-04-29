@@ -35,7 +35,7 @@ static unsigned long GetAllOrders()
 		char user[5] = { 0 };
 		std::vector<Item> cart;
 		char date[11] = { 0 };
-		int total, card, numberOfItems, reserved;
+		int total = 0, card, numberOfItems, reserved;
 		int premium;
 		int current;
 		//used to check if fscanf cant scan in a variable
@@ -122,7 +122,7 @@ static void SetAllOrders()
 				debuging++;
 			if (0 == fprintf(in, "\t\tquantity: %d\n", order.cart[i].amount))
 				debuging++;
-			if (0 == fprintf(in, "reserved: %d\n", order.cart[i].reserved))
+			if (0 == fprintf(in, "\t\treserved: %d\n", order.cart[i].reserved))
 				debuging++;
 			if (0 == fprintf(in, "\t\tdescription: %s\n", order.cart[i].description.c_str()))
 				debuging++;

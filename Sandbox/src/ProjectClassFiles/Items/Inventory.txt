@@ -1,7 +1,7 @@
 {
 name: Houselamp
 quantity: 110
-reserved: 100
+reserved: 0
 description: Table side lamp for your home
 regPrice: 2000
 premPrice: 1800
@@ -9,7 +9,7 @@ premPrice: 1800
 {
 name: Samsung Fridge
 quantity: 140
-reserved: 100
+reserved: 0
 description: New smart fridge from samsung
 regPrice: 180000
 premPrice: 162000
@@ -17,7 +17,7 @@ premPrice: 162000
 {
 name: Electric Stovetop Oven
 quantity: 160
-reserved: 100
+reserved: 0
 description: Stovetop 1800W electrice oven
 regPrice: 300000
 premPrice: 270000
@@ -25,7 +25,7 @@ premPrice: 270000
 {
 name: Coffe table
 quantity: 320
-reserved: 100
+reserved: 0
 description: Redwood coffee table with nice finsih
 regPrice: 7700
 premPrice: 6900
@@ -33,7 +33,7 @@ premPrice: 6900
 {
 name: Eight person Kitchen table
 quantity: 230
-reserved: 100
+reserved: 0
 description: Pine kitchen table for large family gatherings
 regPrice: 18000
 premPrice: 16200
@@ -41,7 +41,7 @@ premPrice: 16200
 {
 name: king size bed frame
 quantity: 130
-reserved: 100
+reserved: 0
 description: king size pine bed frame
 regPrice: 23000
 premPrice: 20700
@@ -49,7 +49,7 @@ premPrice: 20700
 {
 name: Electric Recliner
 quantity: 710
-reserved: 100
+reserved: 0
 description: FUlly electric black leather recliner with usb charging
 regPrice: 40000
 premPrice: 36000
@@ -57,7 +57,7 @@ premPrice: 36000
 {
 name: Blue suede sofa
 quantity: 400
-reserved: 100
+reserved: 0
 description: Blue suede three person sofa
 regPrice: 200000
 premPrice: 180000
@@ -65,7 +65,7 @@ premPrice: 180000
 {
 name: Blue suede love seat
 quantity: 320
-reserved: 100
+reserved: 0
 description: blue suede 2 person love seat
 regPrice: 140000
 premPrice: 126000
@@ -73,7 +73,7 @@ premPrice: 126000
 {
 name: Queen bed frame pine
 quantity: 230
-reserved: 100
+reserved: 0
 description: Pine finished queen sized bed frame
 regPrice: 17000
 premPrice: 15300
@@ -81,7 +81,7 @@ premPrice: 15300
 {
 name: King sized mattress
 quantity: 140
-reserved: 100
+reserved: 0
 description: memory foam king sized mattress
 regPrice: 140000
 premPrice: 126000
@@ -89,7 +89,7 @@ premPrice: 126000
 {
 name: queen sized mattress
 quantity: 430
-reserved: 100
+reserved: 0
 description: memory foam queen sized mattress
 regPrice: 120000
 premPrice: 108000
@@ -97,7 +97,7 @@ premPrice: 108000
 {
 name: tesla floor lamp
 quantity: 530
-reserved: 100
+reserved: 0
 description: tesla bulb floor lamp for soothing house lighting
 regPrice: 6000
 premPrice: 5400
@@ -105,7 +105,7 @@ premPrice: 5400
 {
 name: Night Stand
 quantity: 350
-reserved: 100
+reserved: 0
 description: Redwood Bedside table 
 regPrice: 3500
 premPrice: 3150
@@ -113,7 +113,7 @@ premPrice: 3150
 {
 name: Drawer Set
 quantity: 420
-reserved: 100
+reserved: 0
 description: 4 drawer redwood set
 regPrice: 7500
 premPrice: 6750
@@ -121,7 +121,7 @@ premPrice: 6750
 {
 name: coat rack
 quantity: 120
-reserved: 100
+reserved: 0
 description: front door coat rack 
 regPrice: 2500
 premPrice: 2250
@@ -129,7 +129,7 @@ premPrice: 2250
 {
 name: nest chair
 quantity: 530
-reserved: 100
+reserved: 0
 description: wicker basket chair with cussion 
 regPrice: 10000
 premPrice: 9000
@@ -137,7 +137,7 @@ premPrice: 9000
 {
 name: chair set
 quantity: 920
-reserved: 100
+reserved: 0
 description: 4 redwood chairs 
 regPrice: 15000
 premPrice: 13500
@@ -145,7 +145,7 @@ premPrice: 13500
 {
 name: xbox 1
 quantity: 100
-reserved: 100
+reserved: 0
 description: xbox 1 gaming system 
 regPrice: 30000
 premPrice: 27000
@@ -153,7 +153,7 @@ premPrice: 27000
 {
 name: playsataion 4
 quantity: 120
-reserved: 100
+reserved: 0
 description: playstation 4 gaming system
 regPrice: 30000
 premPrice: 27000

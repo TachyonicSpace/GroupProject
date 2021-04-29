@@ -90,7 +90,7 @@ static void GetInventory()
 
 		//if debugging wasnt altered, store order in allorders
 		if (debuging == 0)
-			inventory.push_back({ name, amount, 100+reserved, description, regPrice, premPrice });
+			inventory.push_back({ name, amount, reserved, description, regPrice, premPrice });
 		else
 			debuging--;
 	}

@@ -32,6 +32,8 @@ static void getUsers()
 	{		//store account balance
 		char username[5] = "tmp ";
 		char password[5] = "tmp ";
+		std::vector<Item> cart;
+		int numitems = 0;
 		int supplier = 0;
 		char address[8] = "tmp  st";
 		char phone[11] = "0123456789";
@@ -44,6 +46,30 @@ static void getUsers()
 			debuging++;
 		if (0 == fscanf(in, "password: %s\n", password))
 			debuging++;
+		if (0 == fscanf(in, "number of items %d\n", &numitems))
+			debuging++;
+
+		for (int i = 0; i < numitems; i++)
+		{
+			int amount, reserved, regPrice, premPrice;
+			char name[51] = { 0 }, description[501] = { 0 };
+
+
+			if (0 == fscanf(in, "\t[\nname: %50[^\n]\n", name))
+				debuging++;
+			if (0 == fscanf(in, "\tquantity: %d\n", &amount))
+				debuging++;
+			if (0 == fscanf(in, "\treserved: %d\n", &reserved))
+				debuging++;
+			if (0 == fscanf(in, "\tdescription: %500[^\n]\n", description))
+				debuging++;
+			if (0 == fscanf(in, "\tregular price: %d\n", &regPrice))
+				debuging++;
+			if (0 == fscanf(in, "\tpremium price: %d\n]\n", &premPrice))
+				debuging++;
+
+			cart.push_back({ name, amount, reserved, description, regPrice, premPrice });
+		}
 		if (0 == fscanf(in, "IsAdmin: %d\n", &supplier))
 			debuging++;
 		if (0 == fscanf(in, "address: %s st\n", address))
@@ -58,7 +84,7 @@ static void getUsers()
 			debuging++;
 
 
-		allUsers.push_back({ username, password, {}, (bool)supplier, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
+		allUsers.push_back({ username, password, cart, (bool)supplier, std::string(address) + " st", phone, CreditCardNumber, (bool)PremiumAccount, (bool)FirstAnnualPurchase });			//store the balance inside the map getting map[card number] = balance
 	}
 
 	fclose(in);
@@ -78,6 +104,29 @@ static void setUsers()
 			debuging++;
 		if (0 == fprintf(out, "password: %s\n", customer.password.c_str()))
 			debuging++;
+
+		{
+			if (0 == fprintf(out, "number of items %d\n", (int)customer.cart.size()))
+				debuging++;
+
+			for (int i = 0; i < customer.cart.size(); i++)
+			{
+
+				if (0 == fprintf(out, "[\n\tname: %s\n", customer.cart[i].name.c_str()))
+					debuging++;
+				if (0 == fprintf(out, "\tquantity: %d\n", customer.cart[i].amount))
+					debuging++;
+				if (0 == fprintf(out, "\treserved: %d\n", customer.cart[i].reserved))
+					debuging++;
+				if (0 == fprintf(out, "\tdescription: %s\n", customer.cart[i].description.c_str()))
+					debuging++;
+				if (0 == fprintf(out, "\tregular price: %d\n", customer.cart[i].regPrice))
+					debuging++;
+				if (0 == fprintf(out, "\tpremium price: %d\n]\n", customer.cart[i].premPrice))
+					debuging++;
+			}
+		}
+
 		if (0 == fprintf(out, "IsAdmin: %d\n", customer.supplier))
 			debuging++;
 		if (0 == fprintf(out, "address: %s\n", customer.address.c_str()))

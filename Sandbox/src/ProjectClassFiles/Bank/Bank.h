@@ -24,6 +24,20 @@ public:
 		}
 		fclose(in);
 	}
+	~Bank()
+	{
+		//updates the new bank balances
+		FILE* in = fopen("src\\ProjectClassFiles\\Bank\\Accounts.txt", "w");
+
+		//while we haven't reached the end of the file
+		for(auto& account : accounts)
+		{		//store account balance
+
+			if (!fprintf(in, "%d->%d\n", account.first, account.second));
+
+		}
+		fclose(in);
+	}
 
 	//charges the card the price
 	void ChargeAmount(int CreditCard, int price)

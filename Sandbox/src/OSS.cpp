@@ -94,7 +94,6 @@ public:
 		else
 		{
 			store();
-			shoppingCart();
 		}
 
 
@@ -177,6 +176,7 @@ public:
 					viewInvoice();
 					viewOrder();
 					selectItems();
+					shoppingCart();
 				}
 			}
 
@@ -307,7 +307,7 @@ private:
 		bool password = ImGui::InputText("password", pass, 5, ImGuiInputTextFlags_Password);
 
 		//if customer hits enter on password or hits sign in button, check credentials and login
-		if (password || ImGui::Button("login"))
+		if (password)
 		{
 			for (Users& user : allUsers)
 			{
@@ -751,24 +751,19 @@ private:
 				switch (order.currentStatus)
 				{
 				case status::Ordered:
+					break;
 				case status::Ready:
 					str += "Ready";
 
-					if (ImGui::BeginCombo(str.c_str(), ""))
+					if (ImGui::Button("Process order and set aside stock?"))
 					{
 						if (strcmp(order.cart[0].name.c_str(), "delivery charge") == 0)
 						{
-							if (ImGui::Selectable("Ship Order to Customer"))
-							{
-								order.currentStatus = status::Shipped;
-							}
+							order.currentStatus = status::Shipped;
 						}
 						else
 						{
-							if (ImGui::Selectable("Ready For Pickup?"))
-							{
-								order.currentStatus = status::Pickup;
-							}
+							order.currentStatus = status::Pickup;
 						}
 						if (order.currentStatus != status::Ordered && order.currentStatus != status::Ready)
 						{
@@ -778,13 +773,12 @@ private:
 								{
 									if (strcmp(items.name.c_str(), myItems.name.c_str()) == 0)
 									{
-										items.reserved -= myItems.amount;
+										items.reserved += myItems.amount;
+										items.amount -= myItems.amount;
 									}
 								}
 							}
 						}
-
-						ImGui::EndCombo();
 					}
 
 
@@ -821,13 +815,13 @@ private:
 
 			if (first == true)
 			{
-				ImGui::BulletText(item.name.c_str());
+				ImGui::Text(item.name.c_str());
 				ImGui::TextColored({ .2, .89, .3, 1 }, "\tPremium Price: %s", GetPrice(item.premPrice).c_str());
 				ImGui::TextColored({ .89, .2, .43, 1 }, "\tRegular Price: %s", GetPrice(item.regPrice).c_str());
 				ImGui::TextColored({ .2, .12, .82, 1 }, "\t%s", item.description.c_str());
 				ImGui::InputInt(("Available Stock##" + item.name).c_str(), &item.amount);
-				ImGui::Text("Reserved Stock: %d", item.reserved);
-				ImGui::Text("total stock: %d", item.amount + item.reserved);
+				ImGui::TextColored({ .87, .50, .40, 1}, "\tReserved Stock: %d", item.reserved);
+				ImGui::TextColored({ .87, .50, .40, 1}, "\ttotal stock: %d", item.amount + item.reserved);
 
 				ImGui::Separator();
 			}

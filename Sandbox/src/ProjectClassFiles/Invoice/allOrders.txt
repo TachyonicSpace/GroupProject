@@ -251,7 +251,7 @@
 	date: 10/15/2021
 	total: 1022500
 	card#: 12
-	status: 0
+	status: 2
 	ConformationCode: 4
 }
 {
@@ -633,4 +633,38 @@
 	card#: 13
 	status: 2
 	ConformationCode: 10
+}
+{
+	user: 1234
+	prem: 0
+	number of items 3
+	[
+		name: Houselamp
+		quantity: 1
+		reserved: 0
+		description: Table side lamp for your home
+		regular price: 2000
+		premium price: 1800
+	]
+	[
+		name: Samsung Fridge
+		quantity: 2
+		reserved: 0
+		description: New smart fridge from samsung
+		regular price: 180000
+		premium price: 162000
+	]
+	[
+		name: Electric Stovetop Oven
+		quantity: 1
+		reserved: 0
+		description: Stovetop 1800W electrice oven
+		regular price: 300000
+		premium price: 270000
+	]
+	date: 03/30/2021
+	total: 662000
+	card#: 19
+	status: -1
+	ConformationCode: 11
 }

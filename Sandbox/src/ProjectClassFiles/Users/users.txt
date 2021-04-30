@@ -99,35 +99,11 @@ First Annual Purchase: 1
 {
 username: 1234
 password: 1234
-number of items 3
-[
-	name: Houselamp
-	quantity: 1
-	reserved: 0
-	description: Table side lamp for your home
-	regular price: 2000
-	premium price: 1800
-]
-[
-	name: Samsung Fridge
-	quantity: 2
-	reserved: 0
-	description: New smart fridge from samsung
-	regular price: 180000
-	premium price: 162000
-]
-[
-	name: Electric Stovetop Oven
-	quantity: 1
-	reserved: 0
-	description: Stovetop 1800W electrice oven
-	regular price: 300000
-	premium price: 270000
-]
+number of items 0
 IsAdmin: 0
 address: st st
 phone :1234567890
 Credit card number: 19
 Premium Account: 0
-First Annual Purchase: 1
+First Annual Purchase: 0
 }

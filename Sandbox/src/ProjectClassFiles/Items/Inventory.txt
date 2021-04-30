@@ -8,16 +8,16 @@ premPrice: 1800
 }
 {
 name: Samsung Fridge
-quantity: 140
-reserved: 0
+quantity: 138
+reserved: 2
 description: New smart fridge from samsung
 regPrice: 180000
 premPrice: 162000
 }
 {
 name: Electric Stovetop Oven
-quantity: 160
-reserved: 0
+quantity: 158
+reserved: 2
 description: Stovetop 1800W electrice oven
 regPrice: 300000
 premPrice: 270000
@@ -48,8 +48,8 @@ premPrice: 20700
 }
 {
 name: Electric Recliner
-quantity: 710
-reserved: 0
+quantity: 709
+reserved: 1
 description: FUlly electric black leather recliner with usb charging
 regPrice: 40000
 premPrice: 36000
@@ -64,8 +64,8 @@ premPrice: 180000
 }
 {
 name: Blue suede love seat
-quantity: 320
-reserved: 0
+quantity: 317
+reserved: 3
 description: blue suede 2 person love seat
 regPrice: 140000
 premPrice: 126000
@@ -120,8 +120,8 @@ premPrice: 6750
 }
 {
 name: coat rack
-quantity: 120
-reserved: 0
+quantity: 117
+reserved: 3
 description: front door coat rack 
 regPrice: 2500
 premPrice: 2250
@@ -144,16 +144,16 @@ premPrice: 13500
 }
 {
 name: xbox 1
-quantity: 100
-reserved: 0
+quantity: 99
+reserved: 1
 description: xbox 1 gaming system 
 regPrice: 30000
 premPrice: 27000
 }
 {
 name: playsataion 4
-quantity: 120
-reserved: 0
+quantity: 116
+reserved: 4
 description: playstation 4 gaming system
 regPrice: 30000
 premPrice: 27000

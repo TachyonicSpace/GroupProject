@@ -371,7 +371,7 @@ private:
 			//makes sure the user information is in correct range
 			if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && strlen(phone.c_str()) == 10 && strlen(address.c_str()) == 4 && cc > 9 && cc < 100 && ImGui::Button("create account"))
 			{
-				allUsers.push_back({ username, password, {}, false, address, phone, cc, premium, true });
+				allUsers.push_back({ username.c_str(), password.c_str(), std::vector<Item>(), false, (address + " st").c_str(), phone.c_str(), cc, (bool)premium, true });
 				loggedin = &allUsers[allUsers.size() - 1];
 
 				//resetting values to empty
@@ -551,7 +551,7 @@ private:
 			static status* statusFilter = nullptr;
 
 			static invoice* currentOrder = nullptr;
-			ImGui::Text((loggedin->username + "'s order history").c_str());
+			ImGui::Text((" " + loggedin->username + "'s order history").c_str());
 			ImGui::Text(("show ")); ImGui::SameLine();
 
 
@@ -849,6 +849,8 @@ int main()
 
 	{
 		if (!loggedin)
+			ImGui::StyleColorsDark();
+		else if (!loggedin->PremiumAccount)
 			ImGui::StyleColorsDark();
 		else if (loggedin->supplier)
 			ImGui::StyleColorsLight();

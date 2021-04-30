@@ -9,7 +9,7 @@ public:
 	Bank()
 	{
 		//stores all the accounts in the account file inside in
-		FILE *in = fopen("src\\ProjectClassFiles\\Bank\\Accounts.txt", "r");
+		FILE *in = fopen("Accounts.txt", "r");
 
 		//while we haven't reached the end of the file
 		while (!feof(in))

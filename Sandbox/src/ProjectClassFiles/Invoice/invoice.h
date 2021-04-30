@@ -24,7 +24,7 @@ std::vector<invoice> allOrders;
 static unsigned long GetAllOrders()
 {
 	//stores all the orders in the order file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Invoice\\allOrders.txt", "r");
+	FILE* in = fopen("allOrders.txt", "r");
 
 	//stores the latest(largest) conformation code, to assign back to bank
 	unsigned long conformationCode = 0;
@@ -101,7 +101,7 @@ static unsigned long GetAllOrders()
 static void SetAllOrders()
 {
 	//stores all the orders in the order file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Invoice\\allOrders.txt", "w");
+	FILE* in = fopen("allOrders.txt", "w");
 
 	//while we haven't reached the end of the file
 	for (auto& order : allOrders)

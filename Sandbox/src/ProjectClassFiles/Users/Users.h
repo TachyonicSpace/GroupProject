@@ -25,7 +25,7 @@ std::vector<Users> allUsers;
 static void getUsers()
 {
 	//stores all the accounts in the account file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Users\\users.txt", "r");
+	FILE* in = fopen("users.txt", "r");
 
 	//while we haven't reached the end of the file
 	while (!feof(in))
@@ -93,7 +93,7 @@ static void getUsers()
 //sets users after program ends
 static void setUsers()
 {
-	FILE* out = fopen("src\\ProjectClassFiles\\Users\\users.txt", "w");
+	FILE* out = fopen("users.txt", "w");
 
 	Users customer;
 	for (int i = 0; i < allUsers.size(); i++)

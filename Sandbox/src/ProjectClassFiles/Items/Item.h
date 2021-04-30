@@ -60,7 +60,7 @@ static std::vector<Item> inventory;
 static void GetInventory()
 {
 	//stores all the items in the order file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Items\\Inventory.txt", "r");
+	FILE* in = fopen("Inventory.txt", "r");
 
 	//while we haven't reached the end of the file
 	while (!feof(in))
@@ -104,7 +104,7 @@ static void GetInventory()
 static void SetInventory()
 {
 	//stores all the orders in the order file inside in
-	FILE* in = fopen("src\\ProjectClassFiles\\Items\\Inventory.txt", "w");
+	FILE* in = fopen("Inventory.txt", "w");
 
 	//while we haven't reached the end of the file
 			//store item information

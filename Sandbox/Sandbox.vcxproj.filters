@@ -22,9 +22,9 @@
     <ClCompile Include="src\app\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\ProjectClassFiles\Bank\Accounts.txt" />
-    <Text Include="src\ProjectClassFiles\Users\users.txt" />
-    <Text Include="src\ProjectClassFiles\Invoice\allOrders.txt" />
-    <Text Include="src\ProjectClassFiles\Items\Inventory.txt" />
+    <Text Include="src\Accounts.txt" />
+    <Text Include="src\users.txt" />
+    <Text Include="src\allOrders.txt" />
+    <Text Include="src\Inventory.txt" />
   </ItemGroup>
 </Project>

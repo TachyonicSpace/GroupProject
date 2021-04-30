@@ -605,6 +605,9 @@ private:
 					str += "}\nstatus: ";
 					switch (order.currentStatus)
 					{
+					case status::Ordered:
+						str += "Ordered, In Processing";
+						break;
 					case status::Ready:
 						str += "Ready";
 						break;

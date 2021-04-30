@@ -300,11 +300,11 @@ private:
 	//Customer (or supplier)
 	void login()
 	{
-		std::string pass;
+		char pass[5] = { 0 };
 		//takes in the username
-		ImGui::InputText("username", &str[0], 255, ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputText("username", &str[0], 5, ImGuiInputTextFlags_EnterReturnsTrue);
 		//takes in the password, hiding the keys typed
-		bool password = ImGui::InputText("password", &pass[0], 255, ImGuiInputTextFlags_Password | ImGuiInputTextFlags_EnterReturnsTrue);
+		bool password = ImGui::InputText("password", pass, 5, ImGuiInputTextFlags_Password);
 
 		//if customer hits enter on password or hits sign in button, check credentials and login
 		if (password || ImGui::Button("login"))
@@ -312,7 +312,7 @@ private:
 			for (Users& user : allUsers)
 			{
 				if (strcmp(str.c_str(), user.username.c_str()) == 0)
-					if (strcmp(pass.c_str(), user.password.c_str()) == 0)
+					if (strcmp(pass, user.password.c_str()) == 0)
 						loggedin = &user;
 			}
 		}
@@ -377,6 +377,7 @@ private:
 				//resetting values to empty
 				username = password = password0 = phone = address = "";
 				premium = cc = 0;
+				newcust = false;
 			}
 			//if hit cancel button, clear fields and return to login page
 			if (ImGui::Button("cancel"))
@@ -413,6 +414,7 @@ private:
 
 				//resetting values to empty
 				username = password = password0 = "";
+				newcust = false;
 			}
 			if (ImGui::Button("cancel"))
 			{

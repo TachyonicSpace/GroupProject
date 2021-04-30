@@ -96,3 +96,14 @@ Credit card number: 15
 Premium Account: 1
 First Annual Purchase: 1
 }
+{
+username: 
+password: 
+number of items 0
+IsAdmin: 0
+address: 
+phone :
+Credit card number: 19
+Premium Account: 0
+First Annual Purchase: 1
+}

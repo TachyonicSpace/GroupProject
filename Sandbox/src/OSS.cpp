@@ -55,9 +55,6 @@ public:
 	//allows us to redirect std::cout into imgui
 	std::stringstream output;
 
-	//TODO remove
-#define debug
-
 	OnImGuiRender(Application& App)
 		:app(App) {}
 
@@ -98,10 +95,6 @@ public:
 		{
 			store();
 			shoppingCart();
-
-#ifdef debug
-			debugSettings();
-#endif
 		}
 
 
@@ -204,72 +197,6 @@ public:
 		}
 	}
 
-#ifdef debug
-	//TODO remove
-	void debugSettings()
-	{
-		//debug settings, allow us to alter the settings that normally we cant change easily
-		ImGui::Begin("settings");
-
-		{//everything between these brackets calculate the index into all users we are
-			int i = -1;
-			for (auto& user : allUsers)
-			{
-				i++;
-				if (loggedin == &user)
-				{
-					i--;
-					break;
-				}
-			}
-			i++;
-			if (i == allUsers.size())
-				i = -1;
-			if (ImGui::InputInt("logged in: ", &i))
-			{
-				if (i < -1)
-				{
-					i = allUsers.size() - 1;
-					loggedin = &allUsers[i];
-				}
-				else if (i == -1)
-					loggedin = nullptr;
-				else if (i >= allUsers.size())
-				{
-					i = -1;
-					loggedin = nullptr;
-				}
-				else
-					loggedin = &allUsers[i];
-
-			}
-		}
-		if (loggedin)
-		{
-			ImGui::Text("username: %s\npassword: %s\nphone: %s\naddress: %s", loggedin->username.c_str(), loggedin->password.c_str(), loggedin->phone.c_str(), loggedin->address.c_str());
-			ImGui::InputInt("Credit card Value", &loggedin->CreditCardNumber);
-			ImGui::Checkbox("admin?", &loggedin->supplier);
-			ImGui::Checkbox("Premium?", &loggedin->PremiumAccount);
-			ImGui::Checkbox("firstAnnualPurchase?", &loggedin->FirstAnnualPurchase);
-		}
-		//will keep increasing the credit card number until we hit one in the bank, overflowing when we exceed the maximum value
-		bool found = false || !loggedin;
-		while (!found)
-		{
-			for (auto acc : bank->accounts)
-			{
-				if (acc.first == loggedin->CreditCardNumber)
-				{
-					ImGui::Text("CC: %d, balance: @%d.%d", acc.first, acc.second / 100, acc.second % 100);
-					found = true;
-				}
-			}
-			if (!found)
-				loggedin->CreditCardNumber = (loggedin->CreditCardNumber + 1) % 33;
-		}
-		ImGui::End();
-	}
-#endif
 	//shows all items in cart
 	void shoppingCart()
 	{
@@ -444,7 +371,7 @@ private:
 			//makes sure the user information is in correct range
 			if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && strlen(phone.c_str()) == 10 && strlen(address.c_str()) == 4 && cc > 9 && cc < 100 && ImGui::Button("create account"))
 			{
-				allUsers.push_back({ username, password, {}, (bool)newcust, address, phone, cc, premium, true });
+				allUsers.push_back({ username, password, {}, false, address, phone, cc, premium, true });
 				loggedin = &allUsers[allUsers.size() - 1];
 
 				//resetting values to empty
@@ -481,7 +408,7 @@ private:
 		{
 			if (strlen(username.c_str()) == 4 && strlen(password.c_str()) == 4 && ImGui::Button("create account"))
 			{
-				allUsers.push_back({ username, password, {}, (bool)newcust, "N/A ", "0000000000", -1, false, true });
+				allUsers.push_back({ username, password, {}, true, "N/A ", "0000000000", -1, false, true });
 				loggedin = &allUsers[allUsers.size() - 1];
 
 				//resetting values to empty
@@ -943,8 +870,3 @@ int main()
 	delete start;
 	bank->~Bank();
 }
-
-/*TODO
-
-wait for komal to finish
-*/

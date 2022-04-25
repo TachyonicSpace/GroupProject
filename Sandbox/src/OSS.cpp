@@ -497,7 +497,7 @@ private:
 			loggedin->cart.push_back({ enter->name, 1, 0, enter->description, enter->regPrice, enter->premPrice });
 		//if we need to add the premium charge to account, add it here
 		if (addPremiumPrice)
-			loggedin->cart.emplace(loggedin->cart.begin(), Item("Premium account First Time Annual Charge", 1, 0, "a charge placed on your card \nfor being a premium member, \nallowing you to get the cheaper \nprices at checkout.", 4000, 4000));
+			loggedin->cart.emplace(loggedin->cart.begin(), Item("Premium account First Time Annual Charge", 1, 0, "a charge placed on your card for being a premium member, allowing you to get the cheaper prices at checkout.", 4000, 4000));
 	}
 
 	//customer, bank
